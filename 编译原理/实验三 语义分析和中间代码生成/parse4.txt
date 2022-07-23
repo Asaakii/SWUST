@@ -1,0 +1,43 @@
+        LOADI 0
+        STO 0
+	POP
+        LOADI 1
+        STO 1
+	POP
+        LOADI 1
+        STO 2
+	POP
+LABEL0:
+        LOAD 2
+        LOADI 10
+        LE
+        BRF LABEL1
+        BR LABEL2
+LABEL3:
+        LOAD 2
+        LOADI 1
+        ADD
+        STO 2
+	POP
+        BR LABEL0
+LABEL2:
+        IN   
+        STO   3
+	POP
+        LOAD 0
+        LOAD 3
+        ADD
+        STO 0
+	POP
+        LOAD 1
+        LOAD 3
+        MULT
+        STO 1
+	POP
+        BR LABEL3
+LABEL1:
+        LOAD 0
+        OUT
+        LOAD 1
+        OUT
+        STOP

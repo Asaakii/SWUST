@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<title>1DBrushing</title>
+	<script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+	<svg width='1200' height='600'></svg>
+	<script>
+		const randomX = d3.randomInt(0, 100)//随机整数
+		const randomY = d3.randomInt(0, 20)
+		const data = d3.range(50).map(() => [randomX(), randomY()])  //返回50组
+
+		const svg = d3.select('svg')
+		const margin = { top: 100, right: 300, bottom: 100, left: 100 }
+		const width = +svg.attr('width') - margin.left - margin.right   //800
+		const height = +svg.attr('height') - margin.top - margin.bottom   //200
+		const g = svg.append('g').attr('transform', `translate(${margin.left} ,${margin.top} )`)
+
+		const xValue = d3.scaleLinear([0, 100], [0, width])
+		const yValue = d3.scaleLinear([0, 20], [height, 0])
+		const [fillColor, selectedColor] = ['blue', 'red']
+
+		const circle = g.append('g')
+			.attr('opacity', 0.5)
+			.selectAll('circle')
+			.data(data)
+			.enter()
+			.append('circle')
+			.attr('cx', d => xValue(d[0]))
+			.attr('cy', d => yValue(d[1]))
+			.attr('fill', fillColor)
+			.attr('r', 5)
+
+		g.append('g')
+			.attr('transform', 'translate(0,' + height + ')')
+			.call(d3.axisBottom(xValue))
+
+		g.append('g')
+			.call(d3.axisLeft(yValue).ticks(5))
+
+		const brush = d3.brushX() //创建水平方向的一维刷取交互
+			.extent([[0, 0], [width, height]])//设置或获取刷取操作的可刷取范围,鼠标在此范围内时为十字形状
+
+		g.call(brush)
+
+		brush.on('start brush', function () { //brush - when the brush moves, such as on mousemove.
+			let extent = d3.brushSelection(this).map(xValue.invert, xValue)//选中节点构成的选择集
+			// let sele = circle.filter(d => extent[0] <= d[0] && d[0] <= extent[1])//过滤出选中节点
+			circle.attr('fill', d => extent[0] <= d[0] && d[0] <= extent[1] ? selectedColor : fillColor)
+			.attr("r", d => extent[0] <= d[0] && d[0] <= extent[1] ? 10:5)
+		})
+
+		//当刷子的选择为空时，取消突出显示
+		brush.on('end', function () {
+			if (d3.brushSelection(this) != null)
+				return
+			circle.attr('fill', fillColor)
+		})
+
+	</script>
+</body>
+
+</html>

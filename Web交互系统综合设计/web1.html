@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>粒子发生器动画</title>
+    </head>
+
+    <body>
+        <div>
+            学号：5120195562 姓名：李鸿
+        </div>
+        <canvas></canvas>
+    </body>
+
+    <script>
+        class circle{
+            constructor (color, radius, v, angle, x, y) {
+                this.color=color;
+                this.radius=radius;
+                this.v=v;
+                this.angle=angle;
+                this.x=x;
+                this.y=y;
+            }
+            draw(ctx) {
+                ctx.beginPath();
+                ctx.arc(this.x,this.y,this.radius,0,2*Math.PI);
+                ctx.closePath();
+                ctx.fillStyle=this.color;
+                ctx.fill();
+            }
+        }
+
+        let arr=[];
+        const cnt=100;
+        let centerX,centerY;
+        const canvas=document.querySelector("canvas");
+        const ctx=canvas.getContext("2d")
+        canvas.width=window.innerWidth;
+        canvas.height=window.innerHeight;
+        centerX=canvas.width*Math.random();
+        centerY=canvas.height*Math.random();
+
+        for (let i=0;i<cnt;i++){
+            let c=new circle(
+                "rgb("+
+                255*Math.random()+","+255*Math.random()+","+255*Math.random()+","+Math.random()+")",
+                10*Math.random()+1,
+                5*Math.random()+1,
+                2*Math.PI*Math.random(),
+                centerX,
+                centerY
+            );
+            arr.push(c);
+        }
+
+        function draw(){
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            for (let i=0;i<cnt;i++){
+                arr[i].x+=arr[i].v*Math.cos(arr[i].angle);
+                arr[i].y+=arr[i].v*Math.sin(arr[i].angle);
+                arr[i].draw(ctx);
+            }
+            requestAnimationFrame(draw)
+        }
+        draw();
+    </script>
+</html>
+
+<!-- ======================================================================================
+
+1.用指定的 id 属性：调用 document.getElementById（id属性值）。
+用指定的 name 属性：调用 document.getElementsByName（name属性值）。
+用指定的标签名字：调用 document|元素对象.getElementsByTagName（标签名）。
+
+2.全局属性class的值是一个以空格分隔的元素的类名列表，它允许CSS和Javascript通过类选择器或DOM方法来选择和访问特定的元素。
+class属性定义了元素的类名。
+class属性为一个元素指定一个或多个类名。
+class属性通常用于指向样式表中的类。但是，JavaScript也可以使用它对具有指定类的HTML元素进行更改
+
+3.let c=new circle(
+    "rgb("+
+    255*Math.random()+","+255*Math.random()+","+255*Math.random()+","+Math.random()+")",
+    10*Math.random()+1,
+    5*Math.random()+1,
+    2*Math.PI*Math.random(),用到了JS的字符串模板语法
+
+4.对，删除数组的头部元素用shift();删除索引为0的元素，并返回删除的元素 -->

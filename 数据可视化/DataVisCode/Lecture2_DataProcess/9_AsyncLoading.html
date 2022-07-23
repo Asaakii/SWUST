@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<title>AsyncLoading</title>
+	<script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+	<script type='text/javascript'>
+		d3.csv('../Resources/data/circle.csv').then(data => {
+			console.log('加载成功！')
+			console.log(data) // 输出数据
+		}, error => {
+			console.log('加载出错！')
+			console.log(error) // 输出错误消息
+		})
+	</script>
+</body>
+
+</html>

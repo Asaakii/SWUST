@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<title>Ex2</title>
+	<script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+	<svg width='1200' height='800'></svg>
+	<script type='text/javascript'>
+
+		d3.csv('../Resources/data/nation.csv').then(data => {
+			var dataArray=new Array()
+			for (var i=0; i<21; i++)	//一维
+			{
+				dataArray[i]=new Array()
+				for (var j=0; j<5; j++)	//二维
+				{
+					dataArray[i][j]=" "
+				}
+			}
+			for (var i=0; i<data.length; i++)
+			{
+				dataArray[i][0]={'year': data[i].Year, 'nation': 'China', 'value': data[i].China}
+				dataArray[i][1]={'year': data[i].Year, 'nation': 'Indonesia', 'value': data[i].Indonesia}
+				dataArray[i][2]={'year': data[i].Year, 'nation': 'Egypt', 'value': data[i].Egypt}
+				dataArray[i][3]={'year': data[i].Year, 'nation': 'Serbia', 'value': data[i].Serbia}
+				dataArray[i][4]={'year': data[i].Year, 'nation': 'Colombia', 'value': data[i].Colombia}
+			}
+			console.log(dataArray)
+
+			d3.select('svg')	//绘制条形图
+				.selectAll('rect')
+				.data(dataArray[0])
+				.enter()
+				.append('rect')               
+				.attr('x', 100)
+				.attr('y', (d, i) => i * 21)
+				.attr('width', d => +d.value / 20)
+				.attr('height', 20)
+				.attr('fill',(d, i) => d3.schemeCategory10[i])
+        	d3.select('svg')	//添加属性值
+				.selectAll('text')
+				.data(dataArray[0])
+				.enter()
+				.append('text')
+				.text(d => `${d.nation}:${d.value}`) 
+				.attr('x', d => +d.value / 20+100)
+				.attr('y', (d, i) => i * 21+16)
+				.attr('fill',(d, i) => d3.schemeCategory10[i])
+		})
+	</script>
+</body>
+
+</html>

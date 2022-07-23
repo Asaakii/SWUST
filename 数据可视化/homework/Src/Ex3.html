@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>Ex3</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1200px' height='800px'>
+		<line x1='100' y1='100' x2='1150' y2='100' style='stroke: #ccc; stroke-width: 1;' />
+		<line x1='100' y1='200' x2='1150' y2='200' style='stroke: #ccc; stroke-width: 1;' />
+		<line x1='100' y1='300' x2='1150' y2='300' style='stroke: #ccc; stroke-width: 1;' />
+		<line x1='100' y1='400' x2='1150' y2='400' style='stroke: #ccc; stroke-width: 1;' />
+		<line x1='100' y1='500' x2='1150' y2='500' style='stroke: #ccc; stroke-width: 1;' />
+		<line x1='100' y1='600' x2='1150' y2='600' style='stroke: #ccc; stroke-width: 1;' />
+        <!--绘制网格线-->
+		<line x1='250' y1='100' x2='250' y2='700' style='stroke: #ccc; stroke-width: 1;' />
+		<line x1='400' y1='100' x2='400' y2='700' style='stroke: #ccc; stroke-width: 1;' />
+		<line x1='550' y1='100' x2='550' y2='700' style='stroke: #ccc; stroke-width: 1;' />
+		<line x1='700' y1='100' x2='700' y2='700' style='stroke: #ccc; stroke-width: 1;' />
+		<line x1='850' y1='100' x2='850' y2='700' style='stroke: #ccc; stroke-width: 1;' />
+		<line x1='1000' y1='100' x2='1000' y2='700' style='stroke: #ccc; stroke-width: 1;' />
+		<line x1='1150' y1='100' x2='1150' y2='700' style='stroke: #ccc; stroke-width: 1;' />
+    </svg>
+
+    <script type='text/javascript'>
+
+        const svg = d3.select('svg')
+        const margin = { top: 100, left: 100 }
+        const barHeight = 600//条形图绘图区高度
+        const barWidth = 1050//条形图绘图区宽度
+        const dataset = new Array()
+        const maxRecovered = 35000000
+        const maxDeath = 600000
+        const duration = 1000//动画时间
+
+        d3.csv('../Resources/data/covid19.csv').then(async function (data)
+        {
+            //处理数据
+            dataProcess(data)
+            //绘制坐标轴
+            initRender()
+            for (let i = 0; i < dataset.length; i++)
+            {
+                if (i == 0)
+                {
+                    await updateRender(dataset[i], dataset[i])
+                } 
+                else
+                {
+                    await updateRender(dataset[i - 1], dataset[i])
+                }
+            }
+        
+        })
+
+        function dataProcess(data)
+        {
+            //转换为二维数组
+            for (let i = 0; i < 18; i++)
+            {
+                //转换日期格式
+                let date = data[i * 10].date;
+                date = '20' + date.slice((date.lastIndexOf('/') + 1)) + '.' + date.slice(0, date.indexOf('/'))
+
+                dataset[i] = {'date': date, 'countries': []}
+
+                for (let j = 0; j < 10; j++)
+                {
+                    let obj = i * 10 + j
+                    dataset[i].countries[j] = {
+                        'country': data[obj].country,
+                        'confirmed': +data[obj].confirmed,
+                        'recovered': +data[obj].recovered,
+                        'death': +data[obj].death
+                    }
+                }
+            }
+            console.log(dataset)
+        }
+
+        function initRender()
+        {
+            //定义一个g元素，把所有绘图内容都放在g里面，形成一个整体，做图形变换的时候以一个整体变换
+            const g = svg.append('g').attr('id', 'maingroup').attr('transform', `translate(${margin.left}, ${margin.top})`)
+
+            const xScale = d3.scaleLinear([0, maxRecovered], [0, barWidth]).nice()//刻度优化
+            const yScale = d3.scaleLinear([0, maxDeath], [barHeight, 0]).nice()
+
+            //定义坐标轴
+            const xAxis = d3.axisBottom(xScale).ticks(5).tickSize(0).tickFormat(d3.format('.2s'))//X轴
+            const yAxis = d3.axisLeft(yScale).ticks(6).tickSize(0).tickFormat(d3.format('.2s'))//Y轴
+
+            //绘制国家标签
+            g.selectAll('text')
+                .data(new Array(10))
+                .enter()
+                .append('text')
+                .attr('x', -15)
+                .attr('y', barHeight + 15)
+                .attr('font-size', '16px')
+                .attr('class', 'country')
+
+            //添加x轴标签
+            g.append('g')
+                .append('text')
+                .attr('x', barWidth / 2)
+                .attr('y', barHeight + 60)
+                .attr('font-size', '40px')
+                .text("Recovered")
+
+            //添加y轴标签
+            g.append('g')
+                .append('text')
+                .attr('x', barWidth - 1400)
+                .attr('y', barHeight - 650)
+                .attr('font-size', '40px')
+                .attr("transform", "rotate(-90)")
+                .text("Death")
+
+            //绘制坐标轴
+            g.append('g').attr('id', 'xAxis').attr('transform', `translate(0, ${barHeight})`).call(xAxis)
+            g.append('g').attr('id', 'yAxis').call(yAxis)
+
+            //设置坐标轴文本字体大小
+            d3.selectAll('.tick text').attr('font-size', '16px')
+
+            //添加日期
+            svg.append('text')
+                .attr('id', 'date')
+                .attr("x", barWidth / 2 - 150)
+                .attr('y', barHeight / 2 + 150)
+                .attr('fill', 'rgb(175, 175, 175)')
+                .attr('font-size', '150px')
+        }
+
+        const updateRender = async function(prevData, currData)
+        {
+            const updateGroup = d3.select('#maingroup')
+
+            const updateXscale = d3.scaleLinear([0, maxRecovered], [0, barWidth]).nice()
+            const updateYscale = d3.scaleLinear([0, maxDeath], [barHeight, 0]).nice()
+            
+            // 多个元素用到相同的动画过渡方式，定义一个统一的transition
+            const transition = d3.transition().duration(duration).ease(d3.easeLinear)
+
+            // 渐变日期
+            svg.selectAll('#date')
+                .text(currData.date)
+
+            // 绘制动态圆
+            const updateCircle = updateGroup.selectAll('circle').data(currData.countries)
+            const enterCircle = updateCircle.enter().append('circle')
+                .attr('cx', 0)
+                .attr('cy', barHeight)
+                .attr('r', 0)
+
+            updateCircle.merge(enterCircle).transition(transition)
+                .attr('cx', d => updateXscale(d.recovered))
+                .attr('cy', d => updateYscale(d.death))
+                .attr('r', d => d.confirmed / 500000)
+                .attr('fill', (d, i) => d3.schemeCategory10[i])
+
+            // 动态国家标签
+            const updateTick = updateGroup.selectAll('.country').data(currData.countries)
+            const enterTick = updateGroup.enter().append('text')
+                .attr('x', 0)
+                .attr('y', barHeight)
+                .text(d => d.country)
+
+            updateTick.merge(enterTick).transition(transition)
+                .attr('x', d => updateXscale(d.recovered) - 15)
+                .attr('y', d => updateYscale(d.death) + d.confirmed / 500000 + 15)
+                .text(d => d.country)
+
+            await transition.end()
+        }
+    </script>
+</body>
+
+</html>

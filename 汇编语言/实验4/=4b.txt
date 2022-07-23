@@ -1,0 +1,66 @@
+;编程实现从键盘接受一个字符串 再从键盘接受一查找的字符 例如g 找到时提示Yes found   找不到时提示No found
+
+;================================
+DATAS  SEGMENT
+
+       T1  DB  10, 13, 'Input String: $'
+       T2  DB  10, 13, 'Input a Char: $'
+
+  RESULT1  DB  10, 13, 'Yes,found !', 13, 10, '$'
+  RESULT2  DB  10, 13, 'No found !', 13, 10, '$'
+
+      KEY  DB  100 DUP(?)
+      SEN  DB  ?
+
+DATAS  ENDS
+;================================
+CODES  SEGMENT
+    ASSUME  CS:CODES, DS:DATAS
+START:
+    MOV  AX, DATAS
+    MOV  DS, AX
+;--------------------------------
+    MOV  DX, OFFSET  T1 ;Input String:
+    MOV  AH, 09H
+    INT  21H
+
+    XOR  BX, BX
+L5:
+    MOV  AH, 01H
+    INT  21H
+    MOV  KEY[BX], AL ;保存输入的字符
+    INC  BX
+    CMP  AL, 13      ;是“回车”？
+    JNZ  L5          ;不是，就继续输入。
+
+    MOV  DX, OFFSET  T2 ;Input a Char:
+    MOV  AH, 09H
+    INT  21H
+
+    MOV  AH, 01H
+    INT  21H
+    MOV  SEN, AL     ;保存关键字
+;-----------------------------
+L1:
+    MOV  AL, KEY[BX - 1]
+    CMP  AL, SEN
+    JZ   L3          ;找到了转移.
+    DEC  BX
+    JNZ  L1
+;-----------------------------
+L2:                  ;没有找到.
+    MOV  DX, OFFSET  RESULT2
+    MOV  AH, 09H
+    INT  21H
+    JMP  L4
+L3:
+    MOV  DX, OFFSET  RESULT1  ;Yes,found !
+    MOV  AH, 09H
+    INT  21H
+
+L4:
+    MOV  AH, 4CH
+    INT  21H
+CODES  ENDS
+    END  START
+;================================

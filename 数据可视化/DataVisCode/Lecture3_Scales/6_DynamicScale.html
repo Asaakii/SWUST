@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<title>DynamicScale</title>
+	<script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+	<svg width='800px' height='300px'>
+		<!-- 绘制一条红色边界线 -->
+		<line x1='306' y1='0' x2='306' y2='150' style='stroke: red; stroke-width: 1;' />
+	</svg>
+
+	<script type='text/javascript'>
+		const dataset = [15, 100, 80, 47, 60, 55]
+		// 生成随机数
+		dataset.push(d3.randomUniform(0, 200)())
+		console.log(dataset[6]) //输出添加的随机数
+
+		const scale = d3.scaleLinear()
+			.domain([0, d3.max(dataset)]) //动态设置输入域
+			.range([0, 300])
+
+		d3.select('svg')
+			.selectAll('rect')
+			.data(dataset)
+			.enter()
+			.append('rect')
+			.attr('x', 5)
+			.attr('y', (d, i) => i * 21)
+			.attr('width', d => scale(d))
+			.attr('height', 20)
+			.attr('fill', 'steelblue')
+	</script>
+</body>
+
+</html>

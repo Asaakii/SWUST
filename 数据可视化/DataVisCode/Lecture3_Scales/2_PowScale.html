@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<title>PowScale</title>
+	<script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+	<svg width='1200' height='800'></svg>
+	<script type='text/javascript'>
+		const dataset = [5, 6, 7, 8, 9, 10]
+		// 指数scale，需要给出指数
+        const datascale = d3.scalePow().exponent(3)
+
+		const colorscale = d3.scaleLinear([0, 10], ['orange', 'steelblue'])
+
+		d3.select('svg')
+			.selectAll('rect')
+			.data(dataset)
+			.enter()
+			.append('rect')
+			.attr('x', 5)
+			.attr('y', (d, i) => i * 21)
+			.attr('width', d => datascale(d))
+			.attr('height', 20)
+			// .attr('fill', 'steelblue')
+			.attr('fill', d => colorscale(d))
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>ForceGraphLayout</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1200px' height='800px'></svg>
+    <script type='text/javascript'>
+
+        const svg = d3.select('svg')
+        const margin = { top: 100, left: 100, bottom: 100, right: 100 }
+        const innerWidth = parseInt(svg.attr('width')) - margin.left - margin.right
+        const innerHeight = parseInt(svg.attr('height')) - margin.top - margin.bottom
+
+        d3.json('../Resources/data/force.json').then(function (data) {
+            renderForceGraph(data)
+        })
+
+        function renderForceGraph(data) {
+            const links = data.links.map(d => Object.create(d))
+            const nodes = data.nodes.map(d => Object.create(d))
+            console.log(links)
+            console.log(nodes)
+
+            color = d3.scaleOrdinal(d3.schemeCategory10)
+
+            const simulation = d3.forceSimulation(nodes)
+                .velocityDecay(0.8)
+                .force('link', d3.forceLink(links).id(d => d.id))
+                .force('charge', d3.forceManyBody())//添加万有引力,作用于所有节点之间的全局力，任何两个节点之间都将受到此力的影响。
+                .force('collision', d3.forceCollide(30)) //添加碰撞作用力，防止重叠，节点间距最小值
+                .force('center', d3.forceCenter(innerWidth / 2, innerHeight / 2))//指定力中心位置
+
+            const link = svg.append('g')
+                .attr('stroke', '#999')
+                .attr('stroke-opacity', 0.6)
+                .selectAll('line')
+                .data(links)
+                .join('line')
+                .attr('stroke-width', d => Math.sqrt(d.value))
+
+            const node = svg.append('g')
+                .attr('stroke', '#fff')
+                .attr('stroke-width', 1.5)
+                .selectAll('circle')
+                .data(nodes)
+                .join('circle')
+                .attr('r', 5)
+                .attr('fill', d => color(d.group))
+                .call(drag(simulation))
+
+            //力模型会在运行中不停的调用tick事件，tick事件受到alpha系数的影响来衰减或停止
+            simulation.on('tick', () => {
+                link.attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y)
+
+                node.attr('cx', d => d.x)
+                    .attr('cy', d => d.y)
+            })
+
+            function drag(simulation) {
+
+                function dragstarted(event) {
+                    //设置衰减系数，对结点位置移动过程的模拟，数值越高移动越快，数值范围[0，1]。重新调用仿真的定时器并且返回仿真，再次激活仿真。
+                    if (!event.active) simulation.alphaTarget(0.3).restart()
+                    event.subject.fx = event.subject.x
+                    event.subject.fy = event.subject.y
+                }
+
+                function dragged(event) {
+                    event.subject.fx = event.x
+                    event.subject.fy = event.y
+                }
+
+                function dragended(event) {
+                    if (!event.active) simulation.alphaTarget(0)
+                    event.subject.fx = null
+                    event.subject.fy = null
+                }
+
+                return d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended)
+            }
+        }
+    </script>
+</body>
+
+</html>

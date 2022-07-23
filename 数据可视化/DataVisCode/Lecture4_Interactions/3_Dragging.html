@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<title>Dragging</title>
+	<script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+	<svg width='1200px' height='800px'></svg>
+	<script type='text/javascript'>
+
+		const width = 600
+		const height = 400
+		const r = 50
+
+		const data = [
+			[width / 2 - r, height / 2 - r],
+			[width / 2 - r, height / 2 + r],
+			[width / 2 + r, height / 2 - r],
+			[width / 2 + r, height / 2 + r]
+		]
+
+		const svg = d3.select('svg')
+
+		const drag = d3.drag() //创建拖拽行为
+			.on('drag', move) //绑定拖拽处理
+
+		svg.selectAll('circle')
+			.data(data)
+			.enter().append('circle')
+			.attr('r', r)
+			.attr('fill', 'steelblue')
+			.attr('transform', d => `translate(${d})`)
+			.call(drag) //调用拖拽
+
+		function move() {
+			let x = d3.pointer(event)[0]
+			let y = d3.pointer(event)[1]
+
+			d3.select(this)
+				.attr('transform', d => `translate(${x}, ${y})`)
+		}
+	</script>
+</body>
+
+</html>

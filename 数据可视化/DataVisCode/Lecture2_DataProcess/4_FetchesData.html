@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<title>FetchesData</title>
+	<script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+	<p>大师兄</p>
+	<p>二师兄</p>
+	<p>三师兄</p>
+
+	<script type='text/javascript'>
+		const dataset = [5, 10, 15]
+		const selection = d3.select('body').selectAll('p').data(dataset)
+
+		// 在控制台查看__data__的值，需要点开输出结果展开后的style后面的三个点（...）
+		console.log(selection)
+		//方式一：从选择集对象属性中获取
+		for (let i = 0; i < selection._groups[0].length; i++) {
+			let data = selection._groups[0][i].__data__
+			selection._groups[0][i].textContent = `第${i}个元素绑定的数据是${data}`
+		}
+
+		//方式二：用回调函数获取
+		// selection.text((d, i) => `第${i}个元素绑定的数据是${d}`)
+	</script>
+</body>
+
+</html>

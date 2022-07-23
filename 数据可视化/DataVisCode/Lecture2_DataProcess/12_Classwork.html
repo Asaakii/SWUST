@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<title>Inclasswork</title>
+	<script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+	<svg width='1200' height='800'></svg>
+	<script type='text/javascript'>
+
+		d3.csv('../Resources/data/assignment.csv').then(dataset => {
+			d3.select('svg')
+				.selectAll('rect')
+				.data(dataset)
+				.enter()
+				.append('rect')
+				.attr('x', 100)
+				.attr('y', (d, i) => 200 - i * 21)
+				.attr('width', d => +d.length * 2)
+				.attr('height', 20)
+				.attr('fill', d => d.color)
+		})
+	</script>
+</body>
+
+</html>

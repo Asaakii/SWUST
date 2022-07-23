@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>WordcloudLayout</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+    <script src='../Resources/lib/d3.layout.cloud.js'></script>
+</head>
+
+<body>
+    <svg width='1200px' height='800px'></svg>
+    <script type='text/javascript'>
+
+        const svg = d3.select('svg')
+        d3.json('../Resources/data/wordcloud.json').then(function (data) {
+
+            const fill = d3.scaleOrdinal(d3.schemeCategory10)
+
+            const layout = d3.layout.cloud()//注意，这不是D3自带的API，是d3.layout.cloud.js中的API
+                .size([600, 400])
+                .words(data)
+                .padding(5) //每个词之间的间隔，不设置时默认为0
+                .rotate(() => ~~(Math.random() * 2) * 90) //~~双非按位取反运算符，功能类似floor()，但速度更快。
+                .font('Impact')
+                .fontSize(d => d.size)
+                .on('end', draw)
+
+            const wordcloudGroup = svg.append('g')
+                .attr('transform', `translate(${layout.size()[0] / 2} ,${layout.size()[1] / 2})`)
+
+            layout.start()
+
+            console.log(layout)
+
+            function draw(words) {
+                wordcloudGroup.selectAll('text')
+                    .data(words)
+                    .enter().append('text')
+                    .style('font-size', d => `${d.size}px`)
+                    .style('font-family', 'Impact')
+                    .style('fill', (d, i) => fill(i))
+                    .attr('text-anchor', 'middle')
+                    .attr('transform', d => `translate(${d.x - 2}, ${d.y}) rotate(${d.rotate})`)
+                    .text(d => d.text)
+            }
+        })
+    </script>
+</body>
+
+</html>

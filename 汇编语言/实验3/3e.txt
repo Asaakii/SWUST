@@ -1,0 +1,27 @@
+CODE  SEGMENT         
+      ASSUME CS:CODE   
+START:  MOV  AH,1
+        INT  21H
+        CMP  AL,0DH
+         JE  EXIT
+        CMP  AL,41H
+         JB  START
+        CMP  AL,5AH
+        JBE  NEXT1
+CMP  AL,61H
+         JB  START
+        CMP  AL,7AH
+         JA  START
+        SUB  AL,20H
+        JMP  NEXT2 
+NEXT1:  ADD  AL,20H
+NEXT2:  MOV  DL,AL
+        MOV  AH,2
+        INT  21H
+        JMP  START
+EXIT:   mov ah,1
+int 21h
+MOV  AX,4C00H  
+        INT  21H 
+  CODE  ENDS 
+        END  START 

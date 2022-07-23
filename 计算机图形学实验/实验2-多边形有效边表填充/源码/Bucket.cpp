@@ -1,0 +1,27 @@
+// Bucket.cpp: implementation of the Bucket class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#include "stdafx.h"
+#include "Test.h"
+#include "Bucket.h"
+
+#ifdef _DEBUG
+#undef THIS_FILE
+static char THIS_FILE[]=__FILE__;
+#define new DEBUG_NEW
+#endif
+
+//////////////////////////////////////////////////////////////////////
+// Construction/Destruction
+//////////////////////////////////////////////////////////////////////
+
+Bucket::Bucket()
+{
+
+}
+
+Bucket::~Bucket()
+{
+
+}

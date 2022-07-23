@@ -1,0 +1,70 @@
+ÿ6ÓëÓï·¨¹æÔòÏà±È£¬Ö»ÓĞ²¿·Ö¹æÔòĞèÒªÌí¼Ó¶¯×÷·ûºÅ£¬ÏÂÃæÎÒÃÇÁĞ³öÌí¼ÓÁË¶¯×÷·ûºÅµÄ¹æÔò¡£
+1¡¢< declaration_stat >¡ıvartablep,datap ->int ID¡ün@name-def¡ın,t;
+¶¯×÷½âÊÍ£º
+vartablepÖ¸³ö·ûºÅ±íµÄ×îºóÒ»¸ö¼ÇÂ¼µÄÏÂÒ»¸öÎ»ÖÃ£¬¼´µÚÒ»¸ö¿Õ°×¼ÇÂ¼Î»ÖÃ¡£Ã¿µ±ÓĞÒ»¸ö¼ÇÂ¼¼ÓÈë·ûºÅ±í£¬¸ÃÖµ
+¼Ó1£»datap±íÊ¾ÒÑ¾­·ÖÅäµÄµØÖ·¿Õ¼ä£¬Ëü¿ªÊ¼Ê±Îª0£¬Ã¿ÉùÃ÷Ò»¸ö±äÁ¿£¬¸ÃÖµÔò¸ù¾İ±äÁ¿ÀàĞÍÀÛ¼Ó£¬ÈçÕûĞÍ¼Ó2£¬
+ÊµĞÍ¼Ó4µÈµÈ¡£
+@name-def¡ın, tµÄ¶¯×÷£º
+²éÑ¯·ûºÅ±í£¬´ÓvartablepËùÖ¸µÄÇ°Ò»¸öÎ»ÖÃÆğÍù»Ø²éÖ±µ½µÚÒ»¸ö¼ÇÂ¼£¬ÈôÃ»ÓĞ£¬½«±êÊ¶·ûÃûn¼°ÀàĞÍ1¡¢datapµÄ
+ÖµÌîÈë·ûºÅ±ívartablepËùÖ¸µÄÎ»ÖÃ£¬È»ºóvartablep¼Ó1£¬datap¸ù¾İÀàĞÍtÔö¼Ó;ÈôÓĞ£¬±¨¸æ´íÎó£º±äÁ¿ÖØ¸´¶¨Òå
+¡£
+2¡¢<expression>::=ID¡ün@LOOK¡ın¡üd@ASSIGN =<bool_expr>@STO¡ıd |<bool_expr>
+3¡¢<bool_expr>::=<additive_expr>
+                |< additive_expr >><additive_expr>@GT
+                |< additive_expr ><<additive_expr>@LES
+                |< additive_expr >>=<additive_expr >@GE
+                |< additive_expr ><=< additive_expr >@LE
+                |< additive_expr >==< additive_expr >@EQ
+                |< additive_expr >!=< additive_expr >@NOTEQ 
+4¡¢< additive_expr>::=<term>{(+< term >@ADD |-<Ïî>@SUB)} 
+5¡¢< term >::=<factor>{(*< factor >@MULT | /< factor >@DIV)} 
+6¡¢< factor >::=(< expression >)| ID¡ün@LOOK¡ın¡üd@LOAD¡ıd |NUM¡üi@LOADI¡ıi
+2¡¢3¡¢4¡¢5¡¢6¹æÔòÖĞµÄ¶¯×÷·ûºÅ½âÊÍÈçÏÂ£º
+@LOOK¡ın¡üd:²é·ûºÅ±ín£¬¸ø³ö±äÁ¿µØÖ·d; Ã»ÓĞ£¬±äÁ¿Ã»¶¨Òå
+@ASSIGN£º³¬Ç°¶ÁÒ»¸ö·ûºÅ£¬Èç¹ûÊÇ'='£¬Ôò±íÊ¾½øÈë¸³Öµ±í´ïÊ½£¬Èç¹û²»ÊÇ'='£¬ÔòÑ¡Ôñ<±È½Ï±í´ïÊ½>£¬È»ºó»¹Òª
+½«³¬Ç°¶ÁµÄÕâ¸ö·ûºÅÍË»Ø¡£
+@STO¡ıd£ºÊä³öÖ¸Áî´úÂëSTO  d, ÇÒcodep++(Òò²úÉúÁËÖ¸Áî£¬ËùÒÔÖ¸Áî¼ÇÊı¼Ó1)
+@LOADI¡ıi£ºÊä³öÖ¸Áî´úÂëLOADI   i ,ÇÒcodep++
+@LOAD¡ıd £ºÊä³öÖ¸Áî´úÂëLOAD   d , ÇÒcodep++
+@GT¡¢@ADDµÈ£ºÊä³öºóµÄÖ¸Áî´úÂëGT¡¢ADDµÈ
+7¡¢<if_stat>::=if (<expression>)@BRF¡ülabel1 <statement > @BR¡ülabel2 
+               @SETlabel¡ılabel1 [ else < statement >] @SETlabel¡ılabel2
+
+ÆäÖĞ¶¯×÷·ûºÅµÄº¬ÒåÈçÏÂ
+  @BRF¡ülabel1 £ºÊä³ö BRF label1,codep++ 
+  @BR¡ülabel2£ºÊä³ö BR label2,codep++ 
+  @SETlabel¡ılabel1£ºÉèÖÃ±êºÅlabel1 
+  @SETlabel¡ılabel2£ºÉèÖÃ±êºÅlabel2
+
+8¡¢<while_stat>::=while @SETlabel¡ülabel1(<expression>) @BRF¡ülabel2 
+                  <statement >@BR¡ılabel1 @SETlabel¡ılabel2
+
+¶¯×÷½âÊÍÈçÏÂ£º
+@SETlabel¡ülabel1£ºÉèÖÃ±êºÅlabel1
+@BRF¡ülabel2 £ºÊä³ö BRF label2,codep++
+@BR¡ılabel1£ºÊä³ö BR label1,codep++
+@SETlabel¡ılabel2£ºÉèÖÃ±êºÅlabel2
+
+9¡¢<for_stat>::=for (<expression>;
+                @SETlabel¡ülabel1< expression >@BRF¡ülabel2@BR¡ülabel3;
+                @SETlabel¡ülabel4 < expression >@BR¡ılabel1) 
+                @SETlabel¡ılabel3 < statement >@BR¡ılabel4@SETlabel¡ılabel2 
+¶¯×÷½âÊÍ£º
+	@SETlabel¡ılabel1£ºÉèÖÃ±êºÅlabel1
+	@BRF¡ülabel2 £ºÊä³ö BRF label2,codep++
+	@BR¡ülabel3£ºÊä³ö BR label3,codep++
+	@SETlabel¡ılabel4£ºÉèÖÃ±êºÅlabel4
+	@BR¡ülabel1£ºÊä³ö BR label1,codep++
+	@SETlabel¡ılabel3£ºÉèÖÃ±êºÅlabel3
+	@BR¡ülabel4£ºÊä³ö BR label4,codep++
+	@SETlabel¡ılabel2£ºÉèÖÃ±êºÅlabel2 
+
+10¡¢<write_stat>::=write <expression>@ OUT;
+¶¯×÷½âÊÍ£º
+  @ OUT£ºÊä³ö OUT
+
+11¡¢<read_stat>::=read ID¡ün LOOK¡ın¡üd @IN¡ıd;
+¶¯×÷½âÊÍ£º
+  @LOOK¡ın¡üd:²é·ûºÅ±ín£¬¸ø³ö±äÁ¿µØÖ·d; Ã»ÓĞ£¬±äÁ¿Ã»¶¨Òå
+  @IN£ºÊä³öIN
+  @STI¡ıd£ºÊä³öÖ¸Áî´úÂëSTI  d

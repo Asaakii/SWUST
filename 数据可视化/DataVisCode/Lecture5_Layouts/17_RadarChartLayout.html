@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>RadarChartLayout</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+    <script src='../Resources/lib/radarchart.js'></script>
+    <link rel='stylesheet' type='text/css' href='../Resources/css/radarchart.css'>
+</head>
+
+<body>
+    <svg width='1200px' height='800px'></svg>
+    <script type='text/javascript'>
+        const svg = d3.select('svg')
+        const margin = { top: 100, left: 100, bottom: 100, right: 100 }
+        const treeGroup = svg.append('g').attr('id', 'maingroup').attr('transform', `translate(${margin.left}, ${margin.top})`)
+
+        d3.json('../Resources/data/radarchart.json').then(function (data) {
+            renderRadarChart(data)
+        })
+
+        function renderRadarChart(data) {
+            const colorscale = d3.scaleOrdinal(d3.schemeCategory10)
+
+            const LegendOptions = ['Smartphone', 'Tablet']
+
+            const innerWidth = parseInt(svg.attr('width')) - margin.left - margin.right
+            const innerHeight = parseInt(svg.attr('height')) - margin.top - margin.bottom
+
+            //配置参数，未配置的按默认值
+            const config = {
+                radius: 3,
+                maxValue: 0.6,
+                levels: 6,
+                ExtraWidthX: 300,//配置图形外的宽高，以完整显示文字
+                ExtraWidthY: 300
+            }
+
+            RadarChart.draw('#maingroup', data, config)
+
+            //标题
+            const text = svg.append('text')
+                .attr('transform', `translate(-${(innerWidth - margin.left) / 2},50)`)
+                .attr('x', innerWidth - 70)
+                .attr('y', 10)
+                .attr('font-size', '20px')
+                .attr('text-anchor', 'middle')
+                .attr('fill', '#404040')
+                .text('What % of owners use a specific service in a week')
+
+            //图例	
+            const legend = svg.append('g')
+                .attr('class', 'legend')
+                .attr('height', 100)
+                .attr('width', 200)
+                .attr('transform', 'translate(-100,120)')
+            //图例小方块
+            legend.selectAll('rect')
+                .data(LegendOptions)
+                .enter()
+                .append('rect')
+                .attr('x', innerWidth - 65)
+                .attr('y', (d, i) => i * 20)
+                .attr('width', 10)
+                .attr('height', 10)
+                .style('fill', (d, i) => colorscale(i))
+            //图例文字
+            legend.selectAll('text')
+                .data(LegendOptions)
+                .enter()
+                .append('text')
+                .attr('x', innerWidth - 52)
+                .attr('y', (d, i) => i * 20 + 9)
+                .attr('font-size', '11px')
+                .attr('fill', '#737373')
+                .text(d => d)
+        }
+    </script>
+</body>
+
+</html>

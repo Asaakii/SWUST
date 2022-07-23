@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+	   <script type="text/javascript" src="d3.js"></script>	
+	   <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+	<title>CS 4460 P5</title>
+    <style>
+    body {
+	  font: 12px sans-serif;
+	}
+	body {
+    background-color: #f6f6f6;
+	} 
+	.tick > line {
+		fill: none;
+		stroke: black;
+	}
+	.tick > text {
+		fill: black;
+	}
+	.selected {
+		stroke: red;
+		fill:red;
+	}
+	.selected2 {
+		stroke: orange;
+		fill:orange;
+	}
+	.img-responsive {
+		height: 300px;
+		width: 250px;
+	}
+	path.domain {
+		fill: none;
+		stroke-width: 2px;
+		stroke: black;
+	}
+	.wrapper {
+		display: table;
+    	margin: 0 auto;
+	}
+	#top {
+		display: table;
+    	margin: 0 auto;
+	}
+	#info {
+		float:left;
+		width: 300px;
+		font-size: 13px
+	}
+	#chart1 {
+	    float:left;
+	}
+	#chart4{
+		float:left;
+	}
+	#chart5 {
+		float:left;
+	}
+	.brush .extent {
+		fill-opacity: .1;
+		stroke: #fff;
+		shape-rendering: crispEdges;
+	}
+	.brush2 {
+		fill-opacity: .1;
+		stroke: #fff;
+		shape-rendering: crispEdges;
+	}
+    </style>
+
+   	</head>
+   	<body>
+   	<div class="wrapper">
+		<div id="top"><h1> Movie MultiView </h1></div>
+		   <br><br><br>
+   	  	<div id="info">
+				<span id="poster"></span><br>
+				<strong>Title: </strong> <span id="title"></span><br>
+                <strong>Year: </strong> <span id="year"></span><br>
+                <strong>Rating: </strong> <span id="rating"></span><br>
+				<strong>Duration: </strong> <span id="duration"></span><br> 
+				<strong>Director: </strong> <span id="director"></span><br> 
+				<strong>Genres: </strong> <span id="genres"></span><br> 
+				<strong>Budget: </strong> <span id="budget"></span><br>
+				<strong>Gross: </strong> <span id="gross"></span><br>
+
+          	</div>
+	  	<div id="chart1">
+          	</div>
+	  	<div id="chart2">
+          	</div>
+	  	<div id="chart3"> 
+         	</div>
+        <br> <br><br><br><br>
+      	<div id="chart4"> 
+          	</div>
+      	<div id="chart5"> 
+          	</div>
+   	</div>
+   	<script>
+   		var margin = {top: 40, right: 20, bottom: 60, left: 40};
+
+   		var width = 400;
+		var height = 400;
+
+   		var width1 = width - margin.left - margin.right;
+		var height1 = height - margin.top - margin.bottom;
+
+		var radius = (Math.min(width, height)/2 - 30);
+
+   		var widthPlot = 750;
+		var heightPlot = 750;
+
+		var num_critic_for_reviews= 0;
+		var num_user_for_reviews = 0;
+		var imdb_score = 0;
+		var budget = 0;
+		var gross = 0;
+		var director_name = ""
+		var duration = 0;
+		var genres = ""
+		var content_rating = ""
+		var movie_title = ""
+
+		var curText = "";
+
+
+		d3.csv("filtered_movies.csv", function(csv) {
+
+			for (var i=0; i<csv.length; ++i) {
+				csv[i].ID = i;
+				csv[i].imdb_score = Number(csv[i].imdb_score);
+				csv[i].num_critic_for_reviews = Number(csv[i].num_critic_for_reviews);
+				csv[i].num_user_for_reviews = Number(csv[i].num_user_for_reviews);
+				csv[i].budget = Number(csv[i].budget);
+				csv[i].gross = Number(csv[i].gross);
+				csv[i].director_name = csv[i].director_name;
+				csv[i].duration = Number(csv[i].duration);
+				csv[i].genres = csv[i].genres;
+				csv[i].content_rating = csv[i].content_rating;
+				csv[i].movie_title = csv[i].movie_title;
+			}
+
+			var moviesByCountry = d3.nest()
+    			.key(function(d){ 
+    				return d.country;
+    			})
+    			.rollup(function(v){ return d3.sum(v, function(d){return 1;});})
+    			.entries(csv);
+
+			var moviesByLanguage = d3.nest()
+    			.key(function(d){ 
+    				return d.language;
+    			})
+    			.rollup(function(v){ return d3.sum(v,function(d){return 1;});})
+    			.entries(csv);
+
+    		var moviesByYear = d3.nest()
+    			.key(function(d){
+    				if (d.title_year != "0")
+    					return d.title_year;
+    				else 
+    					return "N/A";
+    			})
+    			.rollup(function(v){ return d3.sum(v, function(d){return 1;});})
+    			.entries(csv);
+
+    		var colorScale = d3.scale.category10();
+
+    		var xScale = d3.scale.ordinal()
+    			.domain(moviesByYear.map(d => d.key))
+    			.rangePoints([0, width1], 1) 
+
+
+    		var yScale = d3.scale.linear()
+    			.domain([0, d3.max(moviesByYear, d => d.values) + 1])
+    			.range([height1, 0])
+
+    		var chart1 = d3.select("#chart1")
+		                .append("svg:svg")
+		                .attr("width",width)
+		                .attr("height",height)
+		               	.append("g")
+		               	.attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+		    // draw bars
+    		var bar1 = chart1.selectAll(".bar")
+        		.data(moviesByYear)
+      			.enter().append('rect')
+        		.attr('class', 'bar')
+        		.attr('x', d => xScale(d.key))
+        		.attr('y', d => yScale(d.values))
+        		.attr('height', d => height1 - yScale(d.values))
+        		.attr('width', 30)
+        		.attr("transform", "translate(-15, 0)")
+        		.style('fill',d => colorScale(d.key))
+        		.on("mouseover", function(d) {
+      					d3.select(this).style("fill", "#dcdcdc");
+      					curText = chart1.append("text").text(function(){return d.key + " : " + d.values;}).style("font", "15px avenir").style("font-weight", "bold").attr("transform", "translate("+ (width-120)+",0)");
+
+      			})
+        		.on("mouseout", function(d) {
+      					d3.select(this).style("fill", colorScale(d.key));
+      					curText.remove();
+      			})
+      			.on("click", function(d,i){ 
+							// select the clicked circle
+							chart4.selectAll('circle').classed("selected", false);
+							chart5.selectAll('circle').classed("selected", false);
+
+							chart4.selectAll('circle').classed("selected", function(e) {
+								if (d.key != 'N/A')			
+								return e.title_year  == d.key;
+								else
+								return e.title_year == '0'
+							});
+							chart5.selectAll('circle').classed("selected2", function(e) {			
+								if (d.key != 'N/A')			
+								return e.title_year  == d.key;
+								else
+								return e.title_year == '0'
+							});
+
+					});
+
+
+        	var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+    		chart1.append("g")
+        		.attr("class", "x axis")
+        		.attr("transform", "translate(0," + height1 + ")")
+        		.call(xAxis)
+      		  .append("text")
+        		.attr("class", "label")
+        		.attr("x", width1)
+        		.attr("y", 30)
+        		.style("text-anchor", "end")
+        		.text("Title Year");
+
+        	// y-axis
+    		var yAxis = d3.svg.axis().scale(yScale).orient("left");
+    		chart1.append("g")
+        		.attr("class", "y axis")
+        		.attr("transform", "translate(0, 0)")
+        		.call(yAxis)
+      		  .append("text")
+        		.attr("class", "label")
+        		.text("Count")
+        		.attr("transform", "translate(15, -10), rotate(-90)")
+        		.style("text-anchor", "end")
+
+        	chart1.append("text")
+        		.text("Number of Movies by Year")
+        		.attr("transform", "translate(" + (width1/2 - 120) + ",-20)")
+        		.style("font", "23px avenir")
+
+        	var chart2 = d3.select("#chart2")
+		                .append("svg:svg")
+		                .attr("width",width)
+		                .attr("height",height)
+		               	.append("g")
+		               	.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+		    var countCountry = 0;
+		    var otherCountry = [];
+		    var colorScale1 = d3.scale.category20c();
+		    var moviesByCountryfilter = d3.nest()
+    			.key(function(d){
+    				if (d.values > 10) 
+    				return d.key;
+    				else
+    				otherCountry[countCountry] = d.key;
+    				countCountry++;
+    				return "Other";
+    			})
+    			.rollup(function(v){ return d3.sum(v, function(d){return d.values;});})
+    			.entries(moviesByCountry);
+
+		    var pie = d3.layout.pie()
+		    			.value(function(d) {
+		    				return d.values;
+		    			});
+
+        	var arc = d3.svg.arc()
+        				.outerRadius(radius)
+        				.innerRadius(0);
+
+        	var labelArc = d3.svg.arc()
+        					.outerRadius(radius - 40)
+        					.innerRadius(radius - 40);
+
+        	var g = chart2.selectAll(".arc")
+        				.data(pie(moviesByCountryfilter))
+        			.enter().append("g")
+        				.attr("class", "arc");
+
+
+        	g.append("path")
+      				.attr("d", arc)
+      				.style("fill", function(d) { return colorScale1(d.data.key); })
+      				.on("mouseover", function(d) {
+      					d3.select(this).style("fill", "#dcdcdc");
+      					curText = chart2.append("text").text(function(){return d.data.key + " : " + d.data.values;}).style("font", "15px avenir").style("font-weight", "bold");
+
+      				})
+        			.on("mouseout", function(d) {
+      					d3.select(this).style("fill", colorScale1(d.data.key));
+      					curText.remove();
+      				})
+      				.on("click", function(d,i){ 
+							// select the clicked circle
+							chart4.selectAll('circle').classed("selected", false);
+							chart5.selectAll('circle').classed("selected", false);
+
+							chart4.selectAll('circle').classed("selected", function(e) {
+								if (d.data.key != 'Other')			
+								return e.country  == d.data.key;
+								else
+								for (i = 0; i < otherCountry.length; i++) {
+									if (otherCountry[i] == e.country)
+										return true;
+								}
+								return false;
+							});
+							chart5.selectAll('circle').classed("selected2", function(e) {			
+								if (d.data.key != 'Other')			
+								return e.country  == d.data.key;
+								else
+								for (i = 0; i < otherCountry.length; i++) {
+									if (otherCountry[i] == e.country)
+										return true;
+								}
+								return false;
+							});
+
+					});
+
+
+
+
+      		chart2.append("text")
+        		.text("Movies by Countries")
+        		.attr("transform", "translate(-95,"+(-height/2 + 20) +")")
+        		.style("font", "23px avenir")
+
+        	var chart3 = d3.select("#chart2")
+		                .append("svg:svg")
+		                .attr("width",width)
+		                .attr("height",height)
+		               	.append("g")
+		               	.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+		    var countLanguage = 0;
+		    var otherLanguage = [];
+		    var colorScale2 = d3.scale.category20();
+		    var moviesByLanguagefilter = d3.nest()
+    			.key(function(d){
+    				if (d.values > 7) 
+    				return d.key;
+    				else
+    				otherLanguage[countLanguage] = d.key;
+    				countLanguage++;
+    				return "Other";
+    			})
+    			.rollup(function(v){ return d3.sum(v, function(d){return d.values;});})
+    			.entries(moviesByLanguage);
+
+		    var pie = d3.layout.pie()
+		    			.value(function(d) {
+		    				return d.values;
+		    			});
+
+        	var arc = d3.svg.arc()
+        				.outerRadius(radius)
+        				.innerRadius(0);
+
+        	var labelArc = d3.svg.arc()
+        					.outerRadius(radius - 40)
+        					.innerRadius(radius - 40);
+
+        	var g = chart3.selectAll(".arc")
+        				.data(pie(moviesByLanguagefilter))
+        			.enter().append("g")
+        				.attr("class", "arc");
+
+        	g.append("path")
+      				.attr("d", arc)
+      				.style("fill", function(d) { return colorScale2(d.data.key); })
+      				.on("mouseover", function(d) {
+      					d3.select(this).style("fill", "#dcdcdc");
+      					curText = chart3.append("text").text(function(){return d.data.key + " : " + d.data.values;}).style("font", "15px avenir").style("font-weight", "bold");
+
+      				})
+        			.on("mouseout", function(d) {
+      					d3.select(this).style("fill", colorScale2(d.data.key));
+      					curText.remove();
+      				})
+      				.on("click", function(d,i){ 
+							// select the clicked circle
+							chart4.selectAll('circle').classed("selected", false);
+							chart5.selectAll('circle').classed("selected", false);
+
+							chart4.selectAll('circle').classed("selected", function(e) {
+								if (d.data.key != 'Other')			
+								return e.language  == d.data.key;
+								else
+								for (i = 0; i < otherLanguage.length; i++) {
+									if (otherLanguage[i] == e.language)
+										return true;
+								}
+								return false;
+							});
+							chart5.selectAll('circle').classed("selected2", function(e) {			
+								if (d.data.key != 'Other')			
+								return e.language  == d.data.key;
+								else
+								for (i = 0; i < otherLanguage.length; i++) {
+									if (otherLanguage[i] == e.language)
+										return true;
+								}
+								return false;
+							});
+
+					});
+
+      		chart3.append("text")
+        		.text("Movies by Language")
+        		.attr("transform", "translate(-95, " +(-height/2 + 20) + ")")
+        		.style("font", "23px avenir")
+
+			//----------------------------------------------------------------------------------------------------------------------
+			//Scatterplots 4 & 5 
+			var votedExtent = d3.extent(csv, function(row) { return row.num_critic_for_reviews ; });
+	    	var scoreExtent = d3.extent(csv, function(row) { return row.imdb_score; });
+	    	var criticExtent = d3.extent(csv,  function(row) { return row.imdb_score;  });
+	    	var userExtent = d3.extent(csv,  function(row) { return row.num_user_for_reviews;   });  
+
+			var xScale = d3.scale.linear().domain(votedExtent).range([50, 720]);
+			var yScale = d3.scale.linear().domain(scoreExtent).range([720, 50]);
+		
+			var xScale2 = d3.scale.linear().domain(userExtent).range([50, 720]);
+			var yScale2 = d3.scale.linear().domain(criticExtent).range([720, 50]);
+			
+			var xAxis = d3.svg.axis().scale(xScale);
+			var yAxis = d3.svg.axis().scale(yScale);
+		
+			var xAxis2 = d3.svg.axis().scale(xScale2);
+			var yAxis2 = d3.svg.axis().scale(yScale2);
+			
+			yAxis.orient("left");
+			yAxis2.orient("left");
+
+			var chart4 = d3.select("#chart4")
+		                .append("svg:svg")
+		                .attr("width",widthPlot)
+		                .attr("height",heightPlot);
+
+
+	    	var chart5 = d3.select("#chart5")
+		                .append("svg:svg")
+		                .attr("width",widthPlot)
+		                .attr("height",heightPlot);
+
+			var temp1= chart4.selectAll("circle")
+					.data(csv)
+					.enter()
+					.append("circle")
+					.attr("id",function(d,i) {return i;} )
+					.attr("stroke", "black")
+					.attr("cx", function(d) { return xScale(d.num_critic_for_reviews ); })
+					.attr("cy", function(d) { return yScale(d.imdb_score); })
+					.attr("r", 4)
+					.on("click", function(d,i){ 
+						// select the clicked circle
+						chart4.selectAll('circle').classed("selected", false);
+						chart5.selectAll('circle').classed("selected2", false);
+
+						chart4.selectAll('circle').classed("selected", function(e) {			
+							return e.num_critic_for_reviews  == d.num_critic_for_reviews  && d.imdb_score == e.imdb_score &&
+								d.num_user_for_reviews == e.num_user_for_reviews;
+						});
+
+						// extract the index of selected element
+						brushed_idx = chart4.selectAll("circle.selected").data().map(a => a.ID);
+
+						// link to second svg- highlight node in other svg
+						chart5.selectAll("circle").classed("selected2", function(d) {
+							return brushed_idx.includes(d.ID);
+						});
+
+						// details on demand
+						if(d.movie_title != "")
+							d3.select("#title").html(""+d.movie_title);
+						else
+							d3.select("#title").html("Unknown");
+						if(d.title_year != 0)
+							d3.select("#year").html(""+d.title_year);
+						else
+							d3.select("#year").html("Unknown");
+						if(d.content_rating != "")
+							d3.select("#rating").html(""+d.content_rating);
+						else
+							d3.select("#rating").html("Not Rated");
+						if(d.title_year != 0)
+							d3.select("#duration").html(""+d.duration+" min");
+						else
+							d3.select("#duration").html("Unknown");
+						if(d.director_name != "")
+							d3.select("#director").html(""+d.director_name);
+						else
+							d3.select("#director").html("Unknown");
+						if(d.content_rating != "")
+							d3.select("#genres").html(""+d.genres);
+						else
+							d3.select("#genres").html("Unknown");
+						if(d.budget != 0)
+							d3.select("#budget").html("$"+d.budget);
+						else
+							d3.select("#budget").html("Unknown");
+						if(d.gross != 0)
+							d3.select("#gross").html("$"+d.gross);
+						else
+							d3.select("#gross").html("Unknown");
+
+						//--------------------------------------------------------------------------------------------------------------------------------------------------
+						//Movie Poster API
+
+						//Get rid of characters
+						d.movie_title = d.movie_title.replace(':','');
+						d.movie_title = d.movie_title.replace('.','');
+						d.movie_title = d.movie_title.replace('\'','');
+						d.movie_title = d.movie_title.replace(';','');
+						d.movie_title = d.movie_title.replace('#','');
+						d.movie_title = d.movie_title.replace('@','');
+						d.movie_title = d.movie_title.replace('&','');
+						d.movie_title = d.movie_title.replace('-',' ');
+						d.movie_title = d.movie_title.replace('$','');
+						d.movie_title = d.movie_title.replace('%','');
+						d.movie_title = d.movie_title.replace('?','');
+						d.movie_title = d.movie_title.replace('!','');
+						d.movie_title = d.movie_title.replace('*','');
+						d.movie_title = d.movie_title.replace('^','');
+
+						$(d.movie_title).focus(function(){
+							var full = $("#poster").has("img").length ? true : false;
+							if(full == false){
+								$('#poster').empty();
+							}
+						});
+						
+						var getPoster = function(){
+
+							var film = d.movie_title;
+							console.log(film);
+
+							if(film == ''){
+
+								$('#poster').html('<div class="alert"><strong>Oops!</strong> Could not find movie poster!</div>');
+
+							} else {
+
+								$('#poster').html('<div class="alert"><strong> Poster loading...</strong></div>');
+
+								$.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + film + "&callback=?", function(json) {
+								if (json != "Nothing found."){                 
+										$('#poster').html('<img src=\"http://image.tmdb.org/t/p/w500/' + json.results[0].poster_path + '\" class=\"img-responsive\" >');
+									} else {
+										$('#poster').html('<div class="alert"><p> Could not find movie poster!</p></div>');
+
+									}
+								});
+
+							}
+
+							return false;
+						}
+						
+						getPoster();
+
+					}); //Temp1 onclick
+					
+				
+			var temp2= chart5.selectAll("circle")
+				.data(csv)
+				.enter()
+				.append("circle")
+				.attr("id",function(d,i) {return i;} )
+				.attr("stroke", "black")
+				.attr("cx", function(d) { return xScale2(d.num_user_for_reviews); })
+				.attr("cy", function(d) { return yScale2(d.imdb_score); })
+				.attr("r", 4)
+				.on("click", function(d,i){ 
+					// select the clicked circle
+					chart4.selectAll('circle').classed("selected", false);
+					chart5.selectAll('circle').classed("selected2", false);
+					
+					chart5.selectAll('circle').classed("selected2", function(e) {			
+						return e.num_critic_for_reviews  == d.num_critic_for_reviews  && d.imdb_score == e.imdb_score &&
+									d.num_user_for_reviews == e.num_user_for_reviews;
+						});
+
+					// extract the index of selected element
+					brushed_idx = chart5.selectAll("circle.selected2").data().map(a => a.ID);
+
+					// link to second svg- highlight node in other svg
+					chart4.selectAll("circle").classed("selected", function(d) {
+						return brushed_idx.includes(d.ID);
+					});
+
+					// details on demand
+					if(d.movie_title != "")
+						d3.select("#title").html(""+d.movie_title);
+					else
+						d3.select("#title").html("Unknown");
+					if(d.title_year != 0)
+						d3.select("#year").html(""+d.title_year);
+					else
+						d3.select("#year").html("Unknown");
+					if(d.content_rating != "")
+						d3.select("#rating").html(""+d.content_rating);
+					else
+						d3.select("#rating").html("Not Rated");
+					if(d.title_year != 0)
+						d3.select("#duration").html(""+d.duration+" min");
+					else
+						d3.select("#duration").html("Unknown");
+					if(d.director_name != "")
+						d3.select("#director").html(""+d.director_name);
+					else
+						d3.select("#director").html("Unknown");
+					if(d.content_rating != "")
+						d3.select("#genres").html(""+d.genres);
+					else
+						d3.select("#genres").html("Unknown");
+					if(d.budget != 0)
+						d3.select("#budget").html("$"+d.budget);
+					else
+						d3.select("#budget").html("Unknown");
+					if(d.gross != 0)
+						d3.select("#gross").html("$"+d.gross);
+					else
+						d3.select("#gross").html("Unknown");
+
+					//--------------------------------------------------------------------------------------------------------------------------------------------------
+					//Movie Poster API
+
+					//Get rid of characters
+					d.movie_title = d.movie_title.replace(':','');
+					d.movie_title = d.movie_title.replace('.','');
+					d.movie_title = d.movie_title.replace('\'','');
+					d.movie_title = d.movie_title.replace(';','');
+					d.movie_title = d.movie_title.replace('#','');
+					d.movie_title = d.movie_title.replace('@','');
+					d.movie_title = d.movie_title.replace('&','');
+					d.movie_title = d.movie_title.replace('$','');
+					d.movie_title = d.movie_title.replace('%','');
+					d.movie_title = d.movie_title.replace('-',' ');
+					d.movie_title = d.movie_title.replace('?','');
+					d.movie_title = d.movie_title.replace('!','');
+					d.movie_title = d.movie_title.replace('*','');
+					d.movie_title = d.movie_title.replace('^','');
+
+					$(d.movie_title).focus(function(){
+						var full = $("#poster").has("img").length ? true : false;
+						if(full == false){
+							$('#poster').empty();
+						}
+					});
+					
+					var getPoster = function(){
+
+						var film = d.movie_title;
+						console.log(film);
+
+						if(film == ''){
+
+							$('#poster').html('<div class="alert"><strong>Oops!</strong> Could not find movie poster!</div>');
+
+						} else {
+
+							$('#poster').html('<div class="alert"><strong> Poster loading...</strong></div>');
+
+							$.getJSON("https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" + film + "&callback=?", function(json) {
+							if (json != "Nothing found."){                 
+									$('#poster').html('<img src=\"http://image.tmdb.org/t/p/w500/' + json.results[0].poster_path + '\" class=\"img-responsive\" >');
+								} else {
+									$('#poster').html('<div class="alert"><p> Could not find movie poster!</p></div>');
+
+								}
+							});
+
+						}
+
+						return false;
+					}
+					
+					getPoster();
+
+			}); //Temp2 onclick
+
+			chart4 
+				.append("g") // create a group node
+				.attr("transform", "translate(0,"+ (widthPlot -30)+ ")")
+				.call(xAxis) // call the axis generator
+				.append("text")
+				.attr("class", "label")
+				.attr("x", widthPlot-16)
+				.attr("y", -6)
+				.style("text-anchor", "end")
+				.text("Number of Critic Reviews");
+
+			chart4 
+				.append("g") // create a group node
+				.attr("transform", "translate(50, 0)")
+				.call(yAxis)
+				.append("text")
+				.attr("class", "label")
+				.attr("transform", "rotate(-90)")
+				.attr("y", 6)
+				.attr("x", -15)
+				.attr("dy", ".71em")
+				.style("text-anchor", "end")
+				.text("IMDb Score");
+
+			chart5 
+				.append("g") // create a group node
+				.attr("transform", "translate(0,"+ (widthPlot -30)+ ")")
+				.call(xAxis2)
+				.append("text")
+				.attr("class", "label")
+				.attr("x", widthPlot-16)
+				.attr("y", -6)
+				.style("text-anchor", "end")
+				.text("Number of User Reviews");
+
+			chart5 
+				.append("g") // create a group node
+				.attr("transform", "translate(50, 0)")
+				.call(yAxis2)
+				.append("text")
+				.attr("class", "label")
+				.attr("transform", "rotate(-90)")
+				.attr("y", 6)
+				.attr("dy", ".71em")
+				.style("text-anchor", "end")
+				.text("IMDb Score");
+
+			chart4.append("text")
+        		.text("Critic Reviews vs IMDb Score")
+        		.attr("transform", "translate(250,  20 )")
+        		.style("font", "23px avenir")
+
+        	chart5.append("text")
+        		.text("User Reviews vs IMDb Score")
+        		.attr("transform", "translate(250,  20 )")
+        		.style("font", "23px avenir")
+
+			// ------------------------------------------------------
+			// Define brush 1
+			var brush = d3.svg.brush()
+			.extent([[0, 0],[widthPlot, heightPlot]]);
+
+			// Set scales for brush. 
+			brush.x(xScale).y(yScale);
+
+			// 3. bind brush to DOM
+			var brushContainer1 = chart4.append("g")
+				.attr("class", "brush")
+				.call(brush);
+
+			// Register brush events
+			brush
+				.on("brushstart", brushstart)   // when mousedown&dragging starts 
+				.on("brush", brushing)          // when dragging
+				.on("brushend", brushend);      // when mouseup
+
+			function brushstart() {
+				brushContainer2.call(brush2.clear());
+			}
+
+			function brushing() {
+				// simultaneous update during brushing
+				var e = brush.extent();         // coordinates of brushed area: 
+												// top-left x: e[0][0] y: e[0][1]
+												// bottom-right x: e[1][0] y: e[1][1]
+											
+				// change the class of node to brushed if the node is inside the brushed extent
+				chart4.selectAll('circle').classed("selected", function(d) {
+					
+					return e[0][0] <= d.num_critic_for_reviews  && d.num_critic_for_reviews  <= e[1][0] &&
+						e[0][1] <= d.imdb_score && d.imdb_score <= e[1][1];
+				
+				});
+
+				// extract the indexes of brushed elements
+				brushed_idx = chart4.selectAll("circle.selected").data().map(a => a.ID);
+
+				// link to second svg- highlight nodes (that are brushed in svg1) in svg2
+				chart5.selectAll("circle").classed("selected2", function(d) {
+					return brushed_idx.includes(d.ID);
+				});
+			}
+
+			function brushend() {
+				// update after brusing is finished
+			}
+
+			// --------------------------------------------------------
+			// Define brush 2
+			var brush2 = d3.svg.brush()
+			.extent([[0, 0],[widthPlot, heightPlot]]);
+
+			// Set scales for brush. 
+			brush2.x(xScale2).y(yScale2);
+
+			// 3. bind brush to DOM
+			var brushContainer2 = chart5.append("g")
+				.attr("class", "brush2")
+				.call(brush2);
+
+			// Register brush events
+			brush2
+				.on("brushstart", brush2start)   // when mousedown&dragging starts 
+				.on("brush", brushing2)          // when dragging
+				.on("brushend", brush2end);      // when mouseup
+
+			function brush2start() {
+				brushContainer1.call(brush.clear());
+			}
+
+			function brushing2() {
+				// simultaneous update during brushing
+				var e = brush2.extent();         // coordinates of brushed area: 
+												// top-left x: e[0][0] y: e[0][1]
+												// bottom-right x: e[1][0] y: e[1][1]
+											
+				// change the class of node to brushed if the node is inside the brushed extent
+				chart5.selectAll('circle').classed("selected2", function(d) {
+					
+					return e[0][0] <= d.num_user_for_reviews && d.num_user_for_reviews <= e[1][0] &&
+						e[0][1] <= d.imdb_score && d.imdb_score <= e[1][1];
+				
+				});
+
+				// extract the indexes of brushed elements
+				brushed_idx = chart5.selectAll("circle.selected2").data().map(a => a.ID);
+
+				// link to second svg- highlight nodes (that are brushed in svg1) in svg2
+				chart4.selectAll("circle").classed("selected", function(d) {
+					return brushed_idx.includes(d.ID);
+				});
+			}
+
+			function brush2end() {
+				// update after brusing is finished
+			}
+		}); //csv
+
+
+
+   	</script>
+
+  </body>
+</html>

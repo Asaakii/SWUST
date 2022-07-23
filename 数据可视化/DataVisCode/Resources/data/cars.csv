@@ -1,0 +1,407 @@
+Name,Miles_per_Gallon,Horsepower
+chevrolet chevelle malibu,18,130
+buick skylark 320,15,165
+plymouth satellite,18,150
+amc rebel sst,16,150
+ford torino,17,140
+ford galaxie 500,15,198
+chevrolet impala,14,220
+plymouth fury iii,14,215
+pontiac catalina,14,225
+amc ambassador dpl,15,190
+citroen ds-21 pallas,,115
+chevrolet chevelle concours (sw),,165
+ford torino (sw),,153
+plymouth satellite (sw),,175
+amc rebel sst (sw),,175
+dodge challenger se,15,170
+plymouth 'cuda 340,14,160
+ford mustang boss 302,,140
+chevrolet monte carlo,15,150
+buick estate wagon (sw),14,225
+toyota corona mark ii,24,95
+plymouth duster,22,95
+amc hornet,18,97
+ford maverick,21,85
+datsun pl510,27,88
+volkswagen 1131 deluxe sedan,26,46
+peugeot 504,25,87
+audi 100 ls,24,90
+saab 99e,25,95
+bmw 2002,26,113
+amc gremlin,21,90
+ford f250,10,215
+chevy c20,10,200
+dodge d200,11,210
+hi 1200d,9,193
+datsun pl510,27,88
+chevrolet vega 2300,28,90
+toyota corona,25,95
+ford pinto,25,
+volkswagen super beetle 117,,48
+amc gremlin,19,100
+plymouth satellite custom,16,105
+chevrolet chevelle malibu,17,100
+ford torino 500,19,88
+amc matador,18,100
+chevrolet impala,14,165
+pontiac catalina brougham,14,175
+ford galaxie 500,14,153
+plymouth fury iii,14,150
+dodge monaco (sw),12,180
+ford country squire (sw),13,170
+pontiac safari (sw),13,175
+amc hornet sportabout (sw),18,110
+chevrolet vega (sw),22,72
+pontiac firebird,19,100
+ford mustang,18,88
+mercury capri 2000,23,86
+opel 1900,28,90
+peugeot 304,30,70
+fiat 124b,30,76
+toyota corolla 1200,31,65
+datsun 1200,35,69
+volkswagen model 111,27,60
+plymouth cricket,26,70
+toyota corona hardtop,24,95
+dodge colt hardtop,25,80
+volkswagen type 3,23,54
+chevrolet vega,20,90
+ford pinto runabout,21,86
+chevrolet impala,13,165
+pontiac catalina,14,175
+plymouth fury iii,15,150
+ford galaxie 500,14,153
+amc ambassador sst,17,150
+mercury marquis,11,208
+buick lesabre custom,13,155
+oldsmobile delta 88 royale,12,160
+chrysler newport royal,13,190
+mazda rx2 coupe,19,97
+amc matador (sw),15,150
+chevrolet chevelle concours (sw),13,130
+ford gran torino (sw),13,140
+plymouth satellite custom (sw),14,150
+volvo 145e (sw),18,112
+volkswagen 411 (sw),22,76
+peugeot 504 (sw),21,87
+renault 12 (sw),26,69
+ford pinto (sw),22,86
+datsun 510 (sw),28,92
+toyouta corona mark ii (sw),23,97
+dodge colt (sw),28,80
+toyota corolla 1600 (sw),27,88
+buick century 350,13,175
+amc matador,14,150
+chevrolet malibu,13,145
+ford gran torino,14,137
+dodge coronet custom,15,150
+mercury marquis brougham,12,198
+chevrolet caprice classic,13,150
+ford ltd,13,158
+plymouth fury gran sedan,14,150
+chrysler new yorker brougham,13,215
+buick electra 225 custom,12,225
+amc ambassador brougham,13,175
+plymouth valiant,18,105
+chevrolet nova custom,16,100
+amc hornet,18,100
+ford maverick,18,88
+plymouth duster,23,95
+volkswagen super beetle,26,46
+chevrolet impala,11,150
+ford country,12,167
+plymouth custom suburb,13,170
+oldsmobile vista cruiser,12,180
+amc gremlin,18,100
+toyota carina,20,88
+chevrolet vega,21,72
+datsun 610,22,94
+maxda rx3,18,90
+ford pinto,19,85
+mercury capri v6,21,107
+fiat 124 sport coupe,26,90
+chevrolet monte carlo s,15,145
+pontiac grand prix,16,230
+fiat 128,29,49
+opel manta,24,75
+audi 100ls,20,91
+volvo 144ea,19,112
+dodge dart custom,15,150
+saab 99le,24,110
+toyota mark ii,20,122
+oldsmobile omega,11,180
+plymouth duster,20,95
+ford maverick,21,
+amc hornet,19,100
+chevrolet nova,15,100
+datsun b210,31,67
+ford pinto,26,80
+toyota corolla 1200,32,65
+chevrolet vega,25,75
+chevrolet chevelle malibu classic,16,100
+amc matador,16,110
+plymouth satellite sebring,18,105
+ford gran torino,16,140
+buick century luxus (sw),13,150
+dodge coronet custom (sw),14,150
+ford gran torino (sw),14,140
+amc matador (sw),14,150
+audi fox,29,83
+volkswagen dasher,26,67
+opel manta,26,78
+toyota corona,31,52
+datsun 710,32,61
+dodge colt,28,75
+fiat 128,24,75
+fiat 124 tc,26,75
+honda civic,24,97
+subaru,26,93
+fiat x1.9,31,67
+plymouth valiant custom,19,95
+chevrolet nova,18,105
+mercury monarch,15,72
+ford maverick,15,72
+pontiac catalina,16,170
+chevrolet bel air,15,145
+plymouth grand fury,16,150
+ford ltd,14,148
+buick century,17,110
+chevroelt chevelle malibu,16,105
+amc matador,15,110
+plymouth fury,18,95
+buick skyhawk,21,110
+chevrolet monza 2+2,20,110
+ford mustang ii,13,129
+toyota corolla,29,75
+ford pinto,23,83
+amc gremlin,20,100
+pontiac astro,23,78
+toyota corona,24,96
+volkswagen dasher,25,71
+datsun 710,24,97
+ford pinto,18,97
+volkswagen rabbit,29,70
+amc pacer,19,90
+audi 100ls,23,95
+peugeot 504,23,88
+volvo 244dl,22,98
+saab 99le,25,115
+honda civic cvcc,33,53
+fiat 131,28,86
+opel 1900,25,81
+capri ii,25,92
+dodge colt,26,79
+renault 12tl,27,83
+chevrolet chevelle malibu classic,17.5,140
+dodge coronet brougham,16,150
+amc matador,15.5,120
+ford gran torino,14.5,152
+plymouth valiant,22,100
+chevrolet nova,22,105
+ford maverick,24,81
+amc hornet,22.5,90
+chevrolet chevette,29,52
+chevrolet woody,24.5,60
+vw rabbit,29,70
+honda civic,33,53
+dodge aspen se,20,100
+ford granada ghia,18,78
+pontiac ventura sj,18.5,110
+amc pacer d/l,17.5,95
+volkswagen rabbit,29.5,71
+datsun b-210,32,70
+toyota corolla,28,75
+ford pinto,26.5,72
+volvo 245,20,102
+plymouth volare premier v8,13,150
+peugeot 504,19,88
+toyota mark ii,19,108
+mercedes-benz 280s,16.5,120
+cadillac seville,16.5,180
+chevy c10,13,145
+ford f108,13,130
+dodge d100,13,150
+honda Accelerationord cvcc,31.5,68
+buick opel isuzu deluxe,30,80
+renault 5 gtl,36,58
+plymouth arrow gs,25.5,96
+datsun f-10 hatchback,33.5,70
+chevrolet caprice classic,17.5,145
+oldsmobile cutlass supreme,17,110
+dodge monaco brougham,15.5,145
+mercury cougar brougham,15,130
+chevrolet concours,17.5,110
+buick skylark,20.5,105
+plymouth volare custom,19,100
+ford granada,18.5,98
+pontiac grand prix lj,16,180
+chevrolet monte carlo landau,15.5,170
+chrysler cordoba,15.5,190
+ford thunderbird,16,149
+volkswagen rabbit custom,29,78
+pontiac sunbird coupe,24.5,88
+toyota corolla liftback,26,75
+ford mustang ii 2+2,25.5,89
+chevrolet chevette,30.5,63
+dodge colt m/m,33.5,83
+subaru dl,30,67
+volkswagen dasher,30.5,78
+datsun 810,22,97
+bmw 320i,21.5,110
+mazda rx-4,21.5,110
+volkswagen rabbit custom diesel,43.1,48
+ford fiesta,36.1,66
+mazda glc deluxe,32.8,52
+datsun b210 gx,39.4,70
+honda civic cvcc,36.1,60
+oldsmobile cutlass salon brougham,19.9,110
+dodge diplomat,19.4,140
+mercury monarch ghia,20.2,139
+pontiac phoenix lj,19.2,105
+chevrolet malibu,20.5,95
+ford fairmont (auto),20.2,85
+ford fairmont (man),25.1,88
+plymouth volare,20.5,100
+amc concord,19.4,90
+buick century special,20.6,105
+mercury zephyr,20.8,85
+dodge aspen,18.6,110
+amc concord d/l,18.1,120
+chevrolet monte carlo landau,19.2,145
+buick regal sport coupe (turbo),17.7,165
+ford futura,18.1,139
+dodge magnum xe,17.5,140
+chevrolet chevette,30,68
+toyota corona,27.5,95
+datsun 510,27.2,97
+dodge omni,30.9,75
+toyota celica gt liftback,21.1,95
+plymouth sapporo,23.2,105
+oldsmobile starfire sx,23.8,85
+datsun 200-sx,23.9,97
+audi 5000,20.3,103
+volvo 264gl,17,125
+saab 99gle,21.6,115
+peugeot 604sl,16.2,133
+volkswagen scirocco,31.5,71
+honda Accelerationord lx,29.5,68
+pontiac lemans v6,21.5,115
+mercury zephyr 6,19.8,85
+ford fairmont 4,22.3,88
+amc concord dl 6,20.2,90
+dodge aspen 6,20.6,110
+chevrolet caprice classic,17,130
+ford ltd landau,17.6,129
+mercury grand marquis,16.5,138
+dodge st. regis,18.2,135
+buick estate wagon (sw),16.9,155
+ford country squire (sw),15.5,142
+chevrolet malibu classic (sw),19.2,125
+chrysler lebaron town @ country (sw),18.5,150
+vw rabbit custom,31.9,71
+maxda glc deluxe,34.1,65
+dodge colt hatchback custom,35.7,80
+amc spirit dl,27.4,80
+mercedes benz 300d,25.4,77
+cadillac eldorado,23,125
+peugeot 504,27.2,71
+oldsmobile cutlass salon brougham,23.9,90
+plymouth horizon,34.2,70
+plymouth horizon tc3,34.5,70
+datsun 210,31.8,65
+fiat strada custom,37.3,69
+buick skylark limited,28.4,90
+chevrolet citation,28.8,115
+oldsmobile omega brougham,26.8,115
+pontiac phoenix,33.5,90
+vw rabbit,41.5,76
+toyota corolla tercel,38.1,60
+chevrolet chevette,32.1,70
+datsun 310,37.2,65
+chevrolet citation,28,90
+ford fairmont,26.4,88
+amc concord,24.3,90
+dodge aspen,19.1,90
+audi 4000,34.3,78
+toyota corona liftback,29.8,90
+mazda 626,31.3,75
+datsun 510 hatchback,37,92
+toyota corolla,32.2,75
+mazda glc,46.6,65
+dodge colt,27.9,105
+datsun 210,40.8,65
+vw rabbit c (diesel),44.3,48
+vw dasher (diesel),43.4,48
+audi 5000s (diesel),36.4,67
+mercedes-benz 240d,30,67
+honda civic 1500 gl,44.6,67
+renault lecar deluxe,40.9,
+subaru dl,33.8,67
+vokswagen rabbit,29.8,62
+datsun 280-zx,32.7,132
+mazda rx-7 gs,23.7,100
+triumph tr7 coupe,35,88
+ford mustang cobra,23.6,
+honda Accelerationord,32.4,72
+plymouth reliant,27.2,84
+buick skylark,26.6,84
+dodge aries wagon (sw),25.8,92
+chevrolet citation,23.5,110
+plymouth reliant,30,84
+toyota starlet,39.1,58
+plymouth champ,39,64
+honda civic 1300,35.1,60
+subaru,32.3,67
+datsun 210,37,65
+toyota tercel,37.7,62
+mazda glc 4,34.1,68
+plymouth horizon 4,34.7,63
+ford escort 4w,34.4,65
+ford escort 2h,29.9,65
+volkswagen jetta,33,74
+renault 18i,34.5,
+honda prelude,33.7,75
+toyota corolla,32.4,75
+datsun 200sx,32.9,100
+mazda 626,31.6,74
+peugeot 505s turbo diesel,28.1,80
+saab 900s,,110
+volvo diesel,30.7,76
+toyota cressida,25.4,116
+datsun 810 maxima,24.2,120
+buick century,22.4,110
+oldsmobile cutlass ls,26.6,105
+ford granada gl,20.2,88
+chrysler lebaron salon,17.6,85
+chevrolet cavalier,28,88
+chevrolet cavalier wagon,27,88
+chevrolet cavalier 2-door,34,88
+pontiac j2000 se hatchback,31,85
+dodge aries se,29,84
+pontiac phoenix,27,90
+ford fairmont futura,24,92
+amc concord dl,23,
+volkswagen rabbit l,36,74
+mazda glc custom l,37,68
+mazda glc custom,31,68
+plymouth horizon miser,38,63
+mercury lynx l,36,70
+nissan stanza xe,36,88
+honda Accelerationord,36,75
+toyota corolla,34,70
+honda civic,38,67
+honda civic (auto),32,67
+datsun 310 gx,38,67
+buick century limited,25,110
+oldsmobile cutlass ciera (diesel),38,85
+chrysler lebaron medallion,26,92
+ford granada l,22,112
+toyota celica gt,32,96
+dodge charger 2.2,36,84
+chevrolet camaro,27,90
+ford mustang gl,27,86
+vw pickup,44,52
+dodge rampage,32,84
+ford ranger,28,79
+chevy s-10,31,82

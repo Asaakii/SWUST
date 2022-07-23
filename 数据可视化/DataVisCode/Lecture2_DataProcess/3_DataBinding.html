@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<title>DataBinding</title>
+	<script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+	<p>大师兄</p>
+	<p>二师兄</p>
+	<p>三师兄</p>
+
+	<script type='text/javascript'>
+		const dataset = [5, 10, 15]
+		const selection1 = d3.select('body').selectAll('p')//选出元素，构成选择集
+		const selection2 = selection1.data(dataset)//绑定数据和元素，构成一个新的选择集
+		selection2.text(d => d) //文本显示绑定数据
+		// console.log(selection1.nodes())//用selection.nodes()查看选择集中的所有元素
+		console.log(selection2.nodes())
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>TreeMapLayout</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1200px' height='800px'></svg>
+    <script type='text/javascript'>
+
+        const svg = d3.select('svg')
+        const margin = { top: 100, left: 100, bottom: 100, right: 100 }
+
+        d3.json('../Resources/data/tokyo2020.json').then(function (data) {
+            renderTreeMap(data)
+        })
+
+        function renderTreeMap(data) {
+            const treeMapGroup = svg.append('g')
+                .attr('id', 'maingroup')
+                .attr('transform', `translate(${margin.left}, ${margin.top})`)
+
+            const innerWidth = parseInt(svg.attr('width')) - margin.left - margin.right
+            const innerHeight = parseInt(svg.attr('height')) - margin.top - margin.bottom
+            // 生成层次数据，矩形树图需要根据数值大小确定矩形大小，所有节点需要对子节点的数据进行汇总
+            const hData = d3.hierarchy(data)
+                .sum(d => d.count)
+                .sort((a, b) => b.value - a.value)
+            console.log(hData)
+
+            // 定义和设置矩形树图布局
+            const treeMapLayout = d3.treemap().size([innerWidth, innerHeight]).round(true).padding(1)//打开舍入功能,避免像素计算结果非整数,产生虚边
+            const treeMapData = treeMapLayout(hData)
+            console.log(treeMapData)
+
+            const colors = d3.scaleOrdinal(d3.schemePaired)//D3最多只有12个分类色
+            const cells = treeMapGroup.selectAll('cell').data(treeMapData.leaves()).enter()//只绘制叶子节点
+            cells.append('rect')
+                .attr('transform', d => `translate(${d.x0} ,${d.y0})`)
+                .attr('class', 'cell')
+                .attr('width', d => d.x1 - d.x0)
+                .attr('height', d => d.y1 - d.y0)
+                .style('fill', d => colors(d.parent.data.name))
+            //矩形树图是用颜色来分组的,因此使用父节点名字来对每个单元进行着色,以确保属于同一父节点的所有子节点都以相同方式着色
+
+            cells.append('text')
+                .attr('transform', d => `translate(${d.x0} ,${d.y0})`)
+                .style('font-size', 11)
+                .attr('x', d => (d.x1 - d.x0) / 2)
+                .attr('y', d => (d.y1 - d.y0) / 2)
+                .attr('text-anchor', 'middle')
+                .text(d => d.children ? d.data.name : `${d.data.name}：${d.data.count}`)
+                .style('opacity', function (d) {
+                    d.w = this.getComputedTextLength()//获取SVG文字长度
+                    //为避免显示时名字比矩形还大,当名字大于矩形宽度时,将名字的透明度设置为0
+                    return d.w < (d.x1 - d.x0) ? 1 : 0
+                })
+
+        }
+    </script>
+</body>
+
+</html>

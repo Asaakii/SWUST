@@ -1,0 +1,36 @@
+ÿ¢1)<program>::={<declaration_list><statement_list>}
+2)<declaration_list>::=<declaration_list><declaration_stat>|<declaration_stat>
+3)<declaration_stat>::=int ID;
+4)<statement_list>::=<statement_list><statement>|<statement>
+5)<statement>::= <if_stat>|<while_stat>|<for_stat>|<read_stat>|<write_stat>|<command_stat>|<expression_stat>
+6)<if_stat>::= if (<expression >) <statement > [else < statement >]
+7)<while_stat>::= while (<expression >) < statement >
+8)<for_stat>::= for(<expression >,< expression >,< expression >)<statement>
+9)<write_stat>::=write <expression>;
+10)<read_stat>::=read ID;
+11)<compound_stat>::={<statement_list>}
+12)<expression_stat>::=< expression >;|;
+13)< expression >::= ID=<bool_expr>|<bool_expr>
+14)<bool_expr>::=<additive_expr>       |< additive_expr >(>|<|>=|<=|==|!=)< additive_expr > 
+15)< additive_expr>::=<term>{(+|-)< term >} 
+16)< term >::=<factor>{(*| /)< factor >} 
+17)< factor >::=(< expression >)|ID|NUM
+ÆäÖÐ£¬¹æÔò1ºÍ¹æÔò11ÖÐµÄ·ûºÅ·ûºÅ{¡¢}ÎªÖÕ½á·ûºÅ£¬²»ÊÇÔª·ûºÅ£¬¶ø¹æÔò6¡¢7¡¢8ÖÐ³öÏÖµÄ·ûºÅ(ºÍ)Ò²ÊÇÖÕ½á·ûºÅ£¬²»ÊÇ
+Ôª·ûºÅ¡£ÎªÁË±ãÓÚÀí½â¹æÔòÖÐµÄÃ¿¸ö·ûºÅº¬Òå£¬ÏÂÃæ¶ÔÓ¦ÉÏÃæµÄÃ¿Ìõ¹æÔò£¬¸ø³öÖÐÎÄ±í´ïÐÎÊ½£º
+1£©	<³ÌÐò>::={<ÉùÃ÷ÐòÁÐ><Óï¾äÐòÁÐ>}
+2£©	<ÉùÃ÷ÐòÁÐ>::=<ÉùÃ÷ÐòÁÐ><ÉùÃ÷Óï¾ä>|<ÉùÃ÷Óï¾ä>
+3£©	<ÉùÃ÷Óï¾ä> ::=int <±äÁ¿>£»
+4£©	<Óï¾äÐòÁÐ>::=<Óï¾äÐòÁÐ><Óï¾ä>|<Óï¾ä>
+5£©	<Óï¾ä>::=<IFÓï¾ä>|<whileÓï¾ä>|<doÓï¾ä>|<forÓï¾ä>|<READÓï¾ä>|<WRITEÓï¾ä>|<¸´ºÏÓï¾ä>|<±í´ïÊ½Óï¾ä>
+6£©	<if Óï¾ä>::= if (<±í´ïÊ½>) <Óï¾ä > [else <Óï¾ä >]
+7£©	<whileÓï¾ä>::=while(<±í´ïÊ½>) <Óï¾ä>
+8£©	<forÓï¾ä>::=for(<±í´ïÊ½>;<±í´ïÊ½>;<±í´ïÊ½>) <Óï¾ä >
+9£©	<write_Óï¾ä>::=write <±í´ïÊ½>;
+10£©	<read_Óï¾ä>::=read <±äÁ¿>;
+11£©	<¸´ºÏÓï¾ä>::={<Óï¾äÐòÁÐ>}
+12£©	<±í´ïÊ½Óï¾ä>::=<±í´ïÊ½>£»|£»
+13£©	<±í´ïÊ½>::=<±êÊ¶·û>=<²¼¶û±í´ïÊ½>|<²¼¶û±í´ïÊ½>
+14£©	<²¼¶û±í´ïÊ½>::=<ËãÊõ±í´ïÊ½>|<ËãÊõ±í´ïÊ½>(>|<|>=|<=|==|!=)<ËãÊõ±í´ïÊ½>
+15£©	<ËãÊõ±í´ïÊ½>::=<Ïî>{(+|-)<Ïî>}
+16£©	<Ïî>::=<Òò×Ó>{(*|/)<Òò×Ó>}
+17£©	<Òò×Ó>::=(<ËãÊõ±í´ïÊ½>)|<±êÊ¶·û>|<ÎÞ·ûºÅÕûÊý>

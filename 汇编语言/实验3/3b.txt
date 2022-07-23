@@ -1,0 +1,60 @@
+DSEG SEGMENT
+	MESS DB 'Please input string:',0DH,0AH,'$'							;准备用于21H中断调用的字符串显示输出功能，为了美观，添加了回车(0DH)和换行符(0AH)
+	BUFF DB 20,?,20 DUP(?)																	;准备用于21H中断调用的字符串输入功能的 用户自定义缓冲区，分为三部分：最大存储容量（占1B），实际存储字符数（占1B），存储区
+	OUTPUT DB 21 DUP(?)																			;处理后的字符串(多一个字节的位置用于存放'$')
+DSEG ENDS
+CSEG SEGMENT
+	ASSUME CS:CSEG,DS:DSEG,ES:DSEG													;串操作的目标串应该是附加串（ES），为了节省空间将DSEG也声明为ES
+	START:MOV AX,DSEG
+				MOV DS,AX																					;DS段寄存器初始化
+				MOV ES,AX																					;ES段寄存器初始化
+				LEA DX,MESS
+				MOV AH,9																					;字符串显示输出功能号-9
+				INT 21H
+				
+				LEA DX,BUFF
+				MOV AH,10																					;字符串输入功能号-10
+				INT 21H
+				
+				XOR CX,CX																					;CX自异或 清零
+				MOV CL,BUFF+1																			;将实际输入的字符串的长度送给CL   (不能直接给CX，因为BUFF+1处存储的“实际键入字符数”只有1个字节/8位，而CX为16位寄存器，大小不一致)
+				MOV BX,OFFSET BUFF+2															;此时DS:[BX]指向的是我们键入的第一个字符
+				
+				;将输入的字符串进行大写转化
+				
+	 NEXT:MOV AL,DS:[BX]
+				AND AL,11011111B																	;bit5=0,转化成大写字母
+				MOV DS:[BX],AL
+				INC BX
+				LOOP NEXT																					;如果CX!=0,则继续NEXT
+				
+				XOR CX,CX																					;CX自异或 清零
+				MOV CL,BUFF+1																			;将实际输入的字符串的长度送给CL   (不能直接给CX，因为BUFF+1处存储的“实际键入字符数”只有1个字节/8位，而CX为16位寄存器，大小不一致)
+
+				;串操作的初始化 源串 目标串 串长度
+				LEA DI,OUTPUT
+				LEA SI,BUFF+2
+				CLD										
+																	
+	 			REP MOVSB																					;按字节 串传送
+	 			
+	 			;(别忘了在OUTPUT串的末尾添加一个'$')我们要先找到预存放'$'的偏移地址
+	 			XOR CX,CX																					;CX自异或 清零
+				MOV CL,BUFF+1																			;将实际输入的字符串的长度送给CL   (不能直接给CX，因为BUFF+1处存储的“实际键入字符数”只有1个字节/8位，而CX为16位寄存器，大小不一致)
+				MOV BX,OFFSET OUTPUT
+	NEXT1:INC BX
+				LOOP NEXT1
+				INC BX
+				
+				MOV	AL,24H
+				MOV DS:[BX],AL																		;在合适的位置添加'$'
+				
+				;输出转化后的字符串
+				MOV AH,09H
+				MOV DX,OFFSET OUTPUT
+				INT 21H
+				
+				MOV AH,4CH																				;返回DOS功能号-4CH
+				INT 21H
+CSEG ENDS
+		 END START

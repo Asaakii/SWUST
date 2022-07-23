@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset='UTF-8'>
+    <title>SVG:defs&use</title>
+</head>
+
+<body>
+    <svg width='1200' height='800'>
+        <!-- 定义图形部分不显示-->
+        <defs>
+            <g id='heart' fill='red' transform='rotate(90 100 100) translate(250,-200) scale(0.3 0.3)'>
+                   
+                <path d='M200 350 Q30 50 550 350' />
+                <path d='M200 350 Q30 650 550 350' />
+                 
+            </g>
+        </defs>
+        <use x='-200' y='-200' href='#heart' />
+        <use x='-100' y='-100' href='#heart' />
+    </svg>
+</body>
+
+</html>

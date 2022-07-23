@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+	<meta charset='UTF-8'>
+	<title>OrdinalScale</title>
+	<script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+	<svg width='1200' height='800'></svg>
+	<script type='text/javascript'>
+		const dataset = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+		//离散值映射到离散值
+		const datascale = d3.scalePow().exponent(3)
+
+		const colorscale = d3.scaleOrdinal(dataset, d3.schemeCategory10)
+
+		d3.select('svg')
+			.selectAll('rect')
+			.data(dataset)
+			.enter()
+			.append('rect')
+			.attr('x', 5)
+			.attr('y', (d, i) => i * 21)
+			.attr('width', d => datascale(d))
+			.attr('height', 20)
+			.attr('fill', d => colorscale(d))
+	</script>
+</body>
+
+</html>

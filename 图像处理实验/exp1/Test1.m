@@ -1,0 +1,13 @@
+RGB=imread('/img/photo.tif');%读取图像
+[m,n,p]=size(RGB);%矩阵大小
+R=RGB(:,:,1);%R分量
+G=RGB(:,:,2);%G分量
+B=RGB(:,:,3);%B分量
+subplot(2,2,1),image(RGB);
+title('原图');
+subplot(2,2,2),image(R);
+title('R分量');
+subplot(2,2,3),image(G);
+title('G分量');
+subplot(2,2,4),image(B);
+title('B分量');

@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset='UTF-8'>
+	<title>SVG:path</title>
+</head>
+
+<body>
+	<svg width='1200' height='800'>
+		<!-- 端点 -->
+		<circle cx='150' cy='350' r='20' fill='green' />
+		<circle cx='550' cy='350' r='20' fill='green' />
+		<!-- 控制点 -->
+		<circle cx='30' cy='50' r='10' fill='blue' />
+		<!--二次贝塞尔曲线-->
+		<path d='M150 350 Q30 50 550 350' stroke='red' stroke-width=4 fill='none' />
+		<path d='M150 350 Q30 50 550 350' stroke='green' stroke-width=4 fill='none' transform='scale(0.5,0.5)' />
+		<path d='M150 350 Q30 50 550 350' stroke='blue' stroke-width=4 fill='none' transform='translate(300,200)' />
+		<path d='M150 350 Q30 50 550 350' stroke='red' stroke-width=4 fill='none' opacity=0.5 transform='rotate(-30)' />
+		<path d='M150 350 Q30 50 550 350' stroke='orange' stroke-width=4 fill='none' opacity=0.5
+			transform='rotate(90 200 200)' />
+	</svg>
+</body>
+
+</html>

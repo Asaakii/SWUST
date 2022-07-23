@@ -1,0 +1,77 @@
+;=========================================================
+; 文件名: A82514.ASM
+; 功能描述: 发送机的发送程序
+;=========================================================
+
+IOY0        EQU  0600H        ;IOY0起始地址
+IOY1        EQU  0640H        ;IOY1起始地址
+M8251_DATA	EQU IOY0+00H*2
+M8251_CON	EQU IOY0+01H*2
+M8254_2		EQU IOY1+02H*2
+M8254_CON	EQU IOY1+03H*2
+
+SSTACK	SEGMENT STACK
+		DW 64 DUP(?)
+SSTACK	ENDS
+CODE	SEGMENT
+		ASSUME CS:CODE
+START:	MOV AL, 0B6H			;初始化8254, 得到收发时钟
+		MOV DX, M8254_CON
+		OUT DX, AL
+		MOV AL, 0CH
+		MOV DX, M8254_2
+		OUT DX, AL
+		MOV AL, 00H
+		OUT DX, AL
+		CALL INIT				;复位8251
+		CALL DALLY
+		MOV AL, 7EH
+		MOV DX, M8251_CON
+		OUT DX, AL				;8251方式字
+		CALL DALLY
+		MOV AL, 34H
+		OUT DX, AL				;8251控制字
+		CALL DALLY
+		MOV DI, 3000H
+		MOV CX, 000AH
+A1:		MOV AL, [DI]
+		CALL SEND
+		CALL DALLY
+		INC DI
+		LOOP A1
+A2:		JMP A2
+INIT:	MOV AL, 00H				;复位8251子程序
+		MOV DX, M8251_CON
+		OUT DX, AL
+		CALL DALLY
+		OUT DX, AL
+		CALL DALLY
+		OUT DX, AL
+		CALL DALLY
+		MOV AL, 40H
+		OUT DX, AL
+		RET
+DALLY:	PUSH CX
+		MOV CX, 3000H
+A4:		PUSH AX
+		POP AX
+		LOOP A4
+		POP CX
+		RET
+SEND:	PUSH AX					;数据发送子程序
+		PUSH DX
+		MOV AL, 31H
+		MOV DX, M8251_CON
+		OUT DX, AL
+		POP AX
+		MOV DX, M8251_DATA
+		OUT DX, AL
+		MOV DX, M8251_CON
+A3:		IN AL, DX
+		AND AL, 01H
+		JZ A3
+		POP DX
+		RET
+CODE	ENDS
+		END START
+

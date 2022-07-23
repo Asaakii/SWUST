@@ -1,0 +1,236 @@
+stack	segment stack 'stack'	
+		dw 256 dup(0)
+stack    ends
+
+data      segment					
+Mlocation dw 10
+Nlocation dw 25
+Llocation dw 30
+TMEM	  db "Blockchain technology is playing an increasingly important role in the Management."
+TEND	  db '$'		
+TBG		  equ TMEM
+MENU	  db 0ah,0dh,'1)delete:',0ah,0dh,'2)move:',0ah,0dh,'3)copy',0ah,0dh,'4)exit',0ah,0dh,'please input your choice:$'
+promot	  db 0ah,0dh,'before operation is:',0ah,0dh,"$"
+promotRes db 0ah,0dh,'after  operation is:',0ah,0dh,"$"
+INPUTERR  db 0ah,0dh,"input error$"
+tempBuff  db 1000 dup(0)
+data    ends
+
+code    segment					
+start   proc far				
+assume ss: stack, cs: code, ds: data
+		push ds					
+		sub  ax, ax
+		push ax
+		mov  ax, data			
+		mov  ds, ax	
+
+MyDEMO:
+		lea  dx, MENU			
+		mov  ah, 09H
+		int  21H
+		mov  ah, 1				
+		int  21H
+		sub	 al, 30h			
+		xor  bx, bx
+		mov  bl, al
+		cmp  al, 1					
+		jb   ErrorInput
+		cmp  al, 3
+		jbe  inputCorrect
+		cmp  al, 4
+		je   MEXIT			    
+		jmp  ErrorInput
+inputCorrect:
+		mov  ax, bx
+		call selectFunction		
+		jmp  MyDEMO
+ErrorInput:		
+		lea  dx, INPUTERR		
+		mov  ah, 09H
+		int  21H
+		jmp  MyDEMO
+MEXIT:
+		ret						
+start   endp
+
+
+selectFunction	proc
+	push bx
+	push cx
+	push dx
+	push ax					
+	lea  dx, promot 		
+	mov  ah, 09H
+	int  21H
+	lea  dx, TBG 			
+	mov  ah, 09H
+	int  21H
+	pop  ax 
+	cmp  ax, 1
+	jne  NextFun			
+	mov  ax, Mlocation
+	mov  bx, Nlocation
+	lea  cx, TEND
+	lea  si, TBG			
+	call DeleteString
+	jmp  sExit
+NextFun:
+	cmp  ax, 2				
+	jne  NextFun1
+	mov  ax, Mlocation
+	mov  bx, Nlocation
+	mov  cx, Llocation
+	lea  si, TBG			
+	call moveString
+	jmp  sExit
+NextFun1:
+	cmp  ax, 3
+	jne  sExit
+	mov  ax, Mlocation
+	mov  bx, Nlocation
+	mov  cx, Llocation
+	lea  si, TBG			
+	call copyString
+sExit:
+	lea  dx, promotRes 		
+	mov  ah, 09H
+	int  21H
+	lea  dx, TMEM 			
+	mov  ah, 09H
+	int  21H
+	pop  dx
+	pop  cx
+	pop  bx
+	ret
+selectFunction  endp 
+DeleteString	proc		
+	push dx 
+	sub  cx, si				
+	add  cx, 1				
+	sub  cx, bx				
+	add  bx, si				
+	add  si, ax				
+	sub  si, 1				
+DLOOP:
+	mov  dx, [bx]
+	mov  [si], dx						
+	inc  bx
+	inc  si
+	loop  DLOOP
+	pop dx
+	ret
+DeleteString  endp
+copyString	proc
+	push dx
+	mov  dx, bx
+	sub  dx, ax			
+	add  dx, 1				
+	add  ax, si
+	sub  ax, 1				
+	mov  bx, ax
+	add  si, cx
+	sub  si, 1				
+	mov  cx, dx
+CLOOP:
+	mov  dx, [bx]
+	mov  [si], dx			
+	inc  bx
+	inc  si
+	loop  CLOOP
+	pop  dx
+	ret
+copyString	endp
+moveString	proc
+	push dx
+	cmp  cx, ax
+	ja   Next
+	;此处为往前移
+	mov  dx, ax
+	sub  dx, cx			
+	push dx
+	push bx
+	push cx
+	add  cx, si
+	sub  cx, 1				
+	mov  bx, cx
+	lea  di, tempBuff
+	mov  cx, dx
+FLOOP:
+	mov  dx, [bx]
+	mov  [di], dx		
+	inc  bx
+	inc  di
+	loop FLOOP
+	pop  dx
+	add  si, dx					
+	sub  si, 1	
+	pop  dx 
+	sub  dx, ax					
+	mov  cx, dx
+FLOOP1:
+	mov  dx, [bx]
+	mov  [si], dx
+	inc  bx						
+	inc  si
+	loop FLOOP1
+	pop  cx						
+	lea  di, tempBuff
+FLOOP3:
+	mov  dx, [di]
+	mov  [bx], dx
+	inc  bx
+	inc  di
+	loop FLOOP3
+	jmp  Exit
+Next:	
+	cmp  bx, cx
+	ja   Exit
+	;以下是往后移
+	mov  dx, bx
+	sub  dx, ax			
+	add  dx, 1				
+	push dx					
+	push bx					
+	push ax					
+	add  ax, si
+	sub  ax, 1				
+	mov  bx, ax
+	lea  di, tempBuff
+MLOOP:
+	mov  ax, [bx]			
+	mov  [di], ax	
+	inc  di
+	inc  bx
+	dec  dx
+	cmp  dx, 0
+	jne  MLOOP
+	pop  ax
+	add  ax, si
+	sub  ax, 1				
+	pop  bx							
+	sub  cx, bx
+	add  si, bx				
+	mov  bx, ax				
+MLOOP1:
+	mov  ax, [si]
+	mov  [bx], ax
+	inc  bx
+	inc  si
+	loop MLOOP1
+	pop  cx					
+	lea  di, tempBuff
+MLOOP2:
+	mov  ax, [di]
+	mov  [bx],ax
+	inc  bx
+	inc  di
+	loop MLOOP2
+Exit:
+	pop  dx
+	ret
+moveString	endp
+
+					
+code    ends
+end start

@@ -1,0 +1,26 @@
+{
+int a;
+int i;
+int 2b;
+int c
+for (i=1; i <= 10 i=i+1)
+{
+;
+a=a+i
+b=b*i;
+{
+c=a+b;
+}
+while(x<=)
+{
+C=a+b+(x*y;
+if (a>b) 
+{
+read a;
+}
+else 
+{
+write b+5;
+}
+write c
+}

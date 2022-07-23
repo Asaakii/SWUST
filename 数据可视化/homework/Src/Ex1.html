@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ex1</title>
+</head>
+<body>
+    <svg width="1920px" height="1080px">
+        <!--上半部分-->
+        <circle cx='200' cy='440' r='5' stroke="black" style='fill:white' />
+        <path d="M200 440 C 250 440, 290 440, 350 345 S 450 250, 500 250" stroke="red" stroke-width=4 fill='none'/>
+        <circle cx='500' cy='250' r='5' stroke="black" style='fill:white' />
+            <path d="M500 250 C 550 250, 590 250, 650 200 S 750 155, 800 155" stroke="green" stroke-width=4 fill='none'/>
+            <circle cx='800' cy='155' r='5' stroke="black" style='fill:white' />
+                <path d="M800 155 C 850 155, 890 155, 950 133 S 1050 110, 1100 110" stroke="blue" stroke-width=4 fill='none'/>
+                <circle cx='1100' cy='110' r='5' stroke="black" style='fill:white' />
+                <path d="M800 155 C 850 155, 890 155, 950 155 S 1050 155, 1100 155" stroke="blue" stroke-width=4 fill='none'/>
+                <circle cx='1100' cy='155' r='5' stroke="black" style='fill:white' />
+                <path d="M800 155 C 850 155, 890 155, 950 178 S 1050 200, 1100 200" stroke="blue" stroke-width=4 fill='none'/>
+                <circle cx='1100' cy='200' r='5' stroke="black" style='fill:white' />
+            <path d="M500 250 C 550 250, 590 250, 650 300 S 750 345, 800 345" stroke="green" stroke-width=4 fill='none'/>
+            <circle cx='800' cy='345' r='5' stroke="black" style='fill:white' />
+                <path d="M800 345 C 850 345, 890 345, 950 322 S 1050 300, 1100 300" stroke="blue" stroke-width=4 fill='none'/>
+                <circle cx='1100' cy='300' r='5' stroke="black" style='fill:white' />
+                <path d="M800 345 C 850 345, 890 345, 950 345 S 1050 345, 1100 345" stroke="blue" stroke-width=4 fill='none'/>
+                <circle cx='1100' cy='345' r='5' stroke="black" style='fill:white' />
+                <path d="M800 345 C 850 345, 890 345, 950 368 S 1050 390, 1100 390" stroke="blue" stroke-width=4 fill='none'/>
+                <circle cx='1100' cy='390' r='5' stroke="black" style='fill:white' />
+                
+        <!--下半部分-->
+        <path d="M200 440 C 250 440, 290 440, 350 535 S 450 630, 500 630" stroke="red" stroke-width=4 fill='none'/>
+        <circle cx='500' cy='630' r='5' stroke="black" style='fill:white' />
+        <!--这里用g元素将上半部分多个元素组织在一起向下平移-->
+        <g transform='translate(0,380)'>
+            <!--这里直接复制上面的代码-->
+            <path d="M500 250 C 550 250, 590 250, 650 200 S 750 155, 800 155" stroke="green" stroke-width=4 fill='none'/>
+            <circle cx='800' cy='155' r='5' stroke="black" style='fill:white' />
+                <path d="M800 155 C 850 155, 890 155, 950 133 S 1050 110, 1100 110" stroke="blue" stroke-width=4 fill='none'/>
+                <circle cx='1100' cy='110' r='5' stroke="black" style='fill:white' />
+                <path d="M800 155 C 850 155, 890 155, 950 155 S 1050 155, 1100 155" stroke="blue" stroke-width=4 fill='none'/>
+                <circle cx='1100' cy='155' r='5' stroke="black" style='fill:white' />
+                <path d="M800 155 C 850 155, 890 155, 950 178 S 1050 200, 1100 200" stroke="blue" stroke-width=4 fill='none'/>
+                <circle cx='1100' cy='200' r='5' stroke="black" style='fill:white' />
+            <path d="M500 250 C 550 250, 590 250, 650 300 S 750 345, 800 345" stroke="green" stroke-width=4 fill='none'/>
+            <circle cx='800' cy='345' r='5' stroke="black" style='fill:white' />
+                <path d="M800 345 C 850 345, 890 345, 950 322 S 1050 300, 1100 300" stroke="blue" stroke-width=4 fill='none'/>
+                <circle cx='1100' cy='300' r='5' stroke="black" style='fill:white' />
+                <path d="M800 345 C 850 345, 890 345, 950 345 S 1050 345, 1100 345" stroke="blue" stroke-width=4 fill='none'/>
+                <circle cx='1100' cy='345' r='5' stroke="black" style='fill:white' />
+                <path d="M800 345 C 850 345, 890 345, 950 368 S 1050 390, 1100 390" stroke="blue" stroke-width=4 fill='none'/>
+                <circle cx='1100' cy='390' r='5' stroke="black" style='fill:white' />
+        </g>
+    </svg>
+</body>
+</html>

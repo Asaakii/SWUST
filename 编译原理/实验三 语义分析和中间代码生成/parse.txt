@@ -1,0 +1,7 @@
+        LOAD 0
+        LOAD 1
+        ADD
+        STO 2
+        LOAD 2
+        OUT
+        STOP

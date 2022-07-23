@@ -1,0 +1,19 @@
+clear;
+i=imread('text.png');
+a=imread('../img/a.jpg');	%从 text.png 中截取一个字母
+a=rgb2gray(a);
+[ma,na]=size(a);
+[mi,ni]=size(i);
+afft=fft2(rot90(a,2),mi,ni);
+ifft=fft2(i);
+afft(mi,ni)=0;
+filtered=real(ifft2(afft.*ifft));
+filtered=filtered(1:mi,1:ni);
+k=max(max(filtered,[],1));
+filtered=filtered/k;
+result=filtered>0.9;
+figure,
+subplot(221),imshow(i);
+subplot(222),imshow(a);
+subplot(223),imshow(filtered);
+subplot(224),imshow(result);

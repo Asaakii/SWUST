@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>Zooming</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1200px' height='800px'></svg>
+    <script type='text/javascript'>
+
+        const width = 600
+        const height = 400
+        const r = 50
+
+        const data = [
+            [width / 2 - r, height / 2 - r],
+            [width / 2 - r, height / 2 + r],
+            [width / 2 + r, height / 2 - r],
+            [width / 2 + r, height / 2 + r]
+        ]
+
+        const svg = d3.select('svg')
+
+        const zoom = d3.zoom() // 创建缩放行为
+            .scaleExtent([1, 10]) // 10倍缩放
+            .on('zoom', zoomHandler) // 缩放事件监听和处理
+
+        svg.selectAll('circle')
+            .data(data)
+            .enter().append('circle')
+            .attr('r', r)
+            .attr('fill', 'steelblue')
+            .attr('transform', d => `translate(${d})`)
+            .call(zoom)
+
+        function zoomHandler() {
+            let transform = d3.zoomTransform(this)
+            svg.attr('transform', `translate(${transform.x},
+            ${transform.y}) scale(${transform.k})`)
+        }
+    </script>
+</body>
+
+</html>

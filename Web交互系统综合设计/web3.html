@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>踩砖块--canvas游戏</title>
+    <script type="text/javascript" src="./js/qrcode.min.js"></script>
+    <style type="text/css">
+        #score {
+            left: 500px;
+            width: 200px;
+            font: "微软雅黑";
+            color: rgb(0, 0, 0);
+            font-size: 30px;
+        }
+
+        #ct {
+            width: 240px;
+            height: 360px;
+            border: solid black 1px;
+            position: relative;
+        }
+
+        #ct div {
+            float: left;
+            width: 60px;
+            height: 60px;
+            border: solid black 1px;
+            box-sizing: border-box;
+        }
+
+        .brick {
+            background-color: gold;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>踩砖块 - canvas应用</h1>
+    </header>
+    <div id="qrcode">5120195562李鸿</div>
+    <div id="score">得分</div>
+    <div id="ct"></div>
+
+    <script type="text/javascript">
+
+        var score = 0;
+        var div = document.getElementById("score");
+
+        let qrcodeDiv = document.querySelector("#qrcode");
+        new QRCode(qrcodeDiv, {
+            text: qrcodeDiv.innerText,
+            width: 150,
+            height: 150,
+        });
+
+        class Game {
+            static init() {
+                for (let i = 0; i < 24; i++) {
+                    const cell = document.createElement('div');
+                    this.ct.appendChild(cell);
+                    this.cells.push(cell);
+                }
+
+                for (let i = 0; i < 6; i++) {
+                    const col = Math.random() * 4 | 0;
+                    this.bricks.push(col);
+                }
+
+                this.render('brick');
+
+                this.ct.addEventListener('click', (e) => this.handleClick(e));
+            }
+
+            static render(name) {
+                for (let i in this.bricks) {
+                    const idx = i * 4 + this.bricks[i];
+                    this.cells[idx].className = name;
+                }
+            }
+            static handleClick(e) {
+                const el = e.target;
+                if (!el.className) {
+                    div.innerHTML = "得分：" + "0";
+                    alert('Game Over!')
+                }
+                else {
+                    if (el.offsetTop === 300) {
+                        score++;
+                        div.innerHTML = "得分：" + score;
+                        this.render('')
+                        this.bricks.pop();
+                        this.bricks.unshift(Math.random() * 4 | 0);
+                        this.render('brick');
+                    }
+                }
+            }
+        }
+
+        //静态属性
+        Game.ct = document.querySelector('#ct')
+        Game.cells = [];
+        Game.bricks = [];
+        Game.init();
+
+    </script>
+</body>
+
+</html>
+
+<!-- 1. id选择器用于选择一个唯一的元素，要选择具有特定id的元素，写一个井号（＃），后跟该元素的 id。
+类选择器选择有特定 class 属性的 HTML 元素。选择拥有特定 class 的元素，写一个句点（.）字符，后面跟类名。
+元素选择器根据元素名称来选择 HTML 元素。
+
+2.内联式CSS（⾏内式），直接把CSS代码写⼊到HTML标签中
+<p style="color:red";font-size:12px>这⾥是12px红⾊的p标签。</p>
+
+嵌⼊式CSS样式，（内页式）就是把css样式代码写在<style type="text/css">XXX</style>标签之间
+<head>
+  <style type="text/css">
+   span{
+     color:red;
+    }
+  </style>
+</head>
+
+外联CSS样式。外联式css样式就是把css代码写⼀个单独的外部⽂件中，这个css样式⽂件以“.css”为扩展名，在`<head>`内（不是在`<style>`标签内）使⽤`<link>`标签将css样式⽂件链接到HTML⽂件内。
+<link href="base.css" rel="stylesheet" type="text/css" /> -->

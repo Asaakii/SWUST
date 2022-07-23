@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>ArcGenerator</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1200px' height='800px'></svg>
+    <script type='text/javascript'>
+
+        const svg = d3.select('svg')
+
+        const data = { startAngle: 0.6, endAngle: 2.6 }
+
+        const arc = d3.arc()//创建弧生成器
+            .outerRadius(200)//设置弧生成器，此行设置外半径
+            .innerRadius(0)//设置弧生成器，此行设置内半径
+        // .cornerRadius(10)//设置弧生成器，此行设置切片四个角为圆角
+
+        svg.append('g')
+            .attr('transform', 'translate(200,200)')
+            .append('path')
+            .attr('fill', 'purple')
+            .attr('d', arc(data))
+
+        console.log(arc(data))
+    </script>
+</body>
+
+</html>

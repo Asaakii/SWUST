@@ -1,0 +1,83 @@
+html, body{
+    margin: 0;
+    height: 100%;
+}
+
+aside{
+    background-image: url(../img/bg.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 33%;
+    height: 100%;
+    float: left;
+}
+
+.logo{
+    height: 43px;
+    line-height: 43px;
+    padding-left: 43px;
+    margin: 12px auto auto 24px;
+    background: url(../img/logo.png) no-repeat;
+    font-size: 36px;
+}
+
+main {
+    width: 67%;
+    float: left;
+}
+
+form{
+    width: 480px;
+    margin: auto;
+}
+
+.title{
+    font-size: 28px;
+    margin: 15px 0;
+}
+
+.sub-title{
+    font-size: 20px;
+    margin: 15px 0;
+}
+
+.sub-title:last-child{
+    background: linear-gradient(126deg,#fc4754,#ff794c);
+    color: white;
+    cursor: pointer;
+}
+
+.row{
+    margin: 25px 0;
+}
+
+input{
+    width: 100%;
+    box-sizing: border-box;
+    border: solid 1px silver;
+    border-radius: 3px;
+    height: 40px;
+    padding-left: 12px;
+}
+
+/* input:[type="checkbox"]{
+    width: 10px;
+    height: 10px;
+} */
+
+.tip{
+    color: #666;
+    font-size: 10px;
+}
+
+.btn{
+    background-color: #0074d9;
+    color: white;
+    border-radius: 3px;
+    border-style: none;
+}
+
+.btn:hover{
+    background-color: blue;
+}

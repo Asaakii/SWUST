@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='UTF-8'>
+    <title>LeafletBaidumap</title>
+    <link href='../Resources/css/leaflet.css' type='text/css' rel='stylesheet' />
+    <script src='../Resources/lib/leaflet.js'></script>
+    <script src='https://cdn.bootcss.com/proj4js/2.4.3/proj4.js'></script>
+    <script src='https://cdn.bootcss.com/proj4leaflet/1.0.1/proj4leaflet.min.js'></script>
+    <script src='../Resources/lib/leaflet.ChineseTmsProviders.baidu.js'></script>
+</head>
+
+<body>
+    <div id='map' style='width: 100vw; height: 100vh'></div>
+
+    <script type='text/javascript'>
+        const normalMap = L.tileLayer.chinaProvider('Baidu.Normal.Map', {
+            maxZoom: 18,
+            minZoom: 5
+        }),
+            satelliteMap = L.tileLayer.chinaProvider('Baidu.Satellite.Map', {
+                maxZoom: 18,
+                minZoom: 5
+            }),
+            annotionMap = L.tileLayer.chinaProvider('Baidu.Satellite.Annotion', {
+                maxZoom: 18,
+                minZoom: 5
+            })
+
+        const baseLayers = {
+            '地图': normalMap,
+            '影像': satelliteMap
+        }
+
+        // 是否显示文字标注，适合影像地图
+        const overlayLayers = {
+            '标注': annotionMap
+        }
+
+        const map = L.map('map', {
+            crs: L.CRS.Baidu,
+            layers: [normalMap],
+            zoomControl: false,
+            center: [31.535567, 104.697325],
+            zoom: 15
+        })
+
+        L.control.layers(baseLayers, overlayLayers).addTo(map)
+        L.control.zoom({
+            zoomInTitle: '放大',
+            zoomOutTitle: '缩小'
+        }).addTo(map)
+    </script>
+</body>
+
+</html>

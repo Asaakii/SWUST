@@ -1,0 +1,375 @@
+{
+	"name": "东京奥运会TOP20",
+	"children": [
+		{
+			"name": "亚洲",
+			"children": [
+				{
+					"name": "中国",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 38
+						},
+						{
+							"name": "银牌",
+							"count": 32
+						},
+						{
+							"name": "铜牌",
+							"count": 18
+						}
+					]
+				},
+				{
+					"name": "日本",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 27
+						},
+						{
+							"name": "银牌",
+							"count": 14
+						},
+						{
+							"name": "铜牌",
+							"count": 17
+						}
+					]
+				},
+				{
+					"name": "韩国",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 6
+						},
+						{
+							"name": "银牌",
+							"count": 4
+						},
+						{
+							"name": "铜牌",
+							"count": 10
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "欧洲",
+			"children": [
+				{
+					"name": "英国",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 22
+						},
+						{
+							"name": "银牌",
+							"count": 21
+						},
+						{
+							"name": "铜牌",
+							"count": 22
+						}
+					]
+				},
+				{
+					"name": "俄罗斯",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 20
+						},
+						{
+							"name": "银牌",
+							"count": 28
+						},
+						{
+							"name": "铜牌",
+							"count": 23
+						}
+					]
+				},
+				{
+					"name": "荷兰",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 10
+						},
+						{
+							"name": "银牌",
+							"count": 12
+						},
+						{
+							"name": "铜牌",
+							"count": 14
+						}
+					]
+				},
+				{
+					"name": "法国",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 10
+						},
+						{
+							"name": "银牌",
+							"count": 12
+						},
+						{
+							"name": "铜牌",
+							"count": 11
+						}
+					]
+				},
+				{
+					"name": "德国",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 10
+						},
+						{
+							"name": "银牌",
+							"count": 11
+						},
+						{
+							"name": "铜牌",
+							"count": 16
+						}
+					]
+				},
+				{
+					"name": "意大利",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 10
+						},
+						{
+							"name": "银牌",
+							"count": 10
+						},
+						{
+							"name": "铜牌",
+							"count": 20
+						}
+					]
+				},
+				{
+					"name": "匈牙利",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 6
+						},
+						{
+							"name": "银牌",
+							"count": 7
+						},
+						{
+							"name": "铜牌",
+							"count": 7
+						}
+					]
+				},
+				{
+					"name": "波兰",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 4
+						},
+						{
+							"name": "银牌",
+							"count": 5
+						},
+						{
+							"name": "铜牌",
+							"count": 5
+						}
+					]
+				},
+				{
+					"name": "捷克",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 4
+						},
+						{
+							"name": "银牌",
+							"count": 4
+						},
+						{
+							"name": "铜牌",
+							"count": 3
+						}
+					]
+				},
+				{
+					"name": "挪威",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 4
+						},
+						{
+							"name": "银牌",
+							"count": 2
+						},
+						{
+							"name": "铜牌",
+							"count": 2
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "大洋洲",
+			"children": [
+				{
+					"name": "澳大利亚",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 17
+						},
+						{
+							"name": "银牌",
+							"count": 7
+						},
+						{
+							"name": "铜牌",
+							"count": 22
+						}
+					]
+				},
+				{
+					"name": "新西兰",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 7
+						},
+						{
+							"name": "银牌",
+							"count": 6
+						},
+						{
+							"name": "铜牌",
+							"count": 7
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "北美洲",
+			"children": [
+				{
+					"name": "美国",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 39
+						},
+						{
+							"name": "银牌",
+							"count": 41
+						},
+						{
+							"name": "铜牌",
+							"count": 33
+						}
+					]
+				},
+				{
+					"name": "加拿大",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 7
+						},
+						{
+							"name": "银牌",
+							"count": 6
+						},
+						{
+							"name": "铜牌",
+							"count": 11
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "南美洲",
+			"children": [
+				{
+					"name": "巴西",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 7
+						},
+						{
+							"name": "银牌",
+							"count": 6
+						},
+						{
+							"name": "铜牌",
+							"count": 8
+						}
+					]
+				},
+				{
+					"name": "古巴",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 7
+						},
+						{
+							"name": "银牌",
+							"count": 3
+						},
+						{
+							"name": "铜牌",
+							"count": 5
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "非洲",
+			"children": [
+				{
+					"name": "肯尼亚",
+					"children": [
+						{
+							"name": "金牌",
+							"count": 4
+						},
+						{
+							"name": "银牌",
+							"count": 4
+						},
+						{
+							"name": "铜牌",
+							"count": 2
+						}
+					]
+				}
+			]
+		}	
+	]
+}

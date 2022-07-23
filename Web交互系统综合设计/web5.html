@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="./js/qrcode.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/web5.css" />
+    <script src="js/web5.js" defer></script>
+    <title>QQ注册</title>
+</head>
+
+<body>
+    <aside>
+        <div class="logo">QQ</div>
+    </aside>
+    <main>
+        <form action="/api/signup_user">
+            <div id="qrcode">5120195562李鸿</div>
+            <div class="title">欢迎注册QQ</div>
+            <div class="sub-title">
+                <div>每一天，乐在沟通</div>
+                <div>免费靓号</div>
+            </div>
+            <div class="row">
+                <input name="username" type="text" placeholder="用户名" required pattern="^[A-Za-z0-9]{3,12}$"
+                    title="用户名只能是字母和数字，长度在3-12位之间" />
+            </div>
+            <div class="row">
+                <input name="password" type="password" placeholder="请输入密码" required minlength="8" maxlength="20"
+                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).+$" title="密码太简单，必须包括小写字母、大写字母和数字" />
+            </div>
+            <div class="row">
+                <div style="display: flex; column-gap: 12px;">
+                    <input type="text" name="country_code" list="country-code" value="+86" style="width: 120px;" />
+                    <datalist id="country-code">
+                        <option value="+354">Iceland</option>
+                        <option value="+36">Hungary</option>
+                        <option value="+86">China</option>
+                        <option value="+852">Hong Kong</option>
+                        <option value="+91">India</option>
+                    </datalist>
+                    <input type="text" name="mobile" placeholder="手机号" required pattern="^[0-9]{8,15}$" />
+                </div>
+                <div class="tip">可通过该手机号找回密码</div>
+            </div>
+            <div class="row" style="display: flex; column-gap: 12px;">
+                <input type="text" name="verification_code" placeholder="短信验证码" required style="width: 120px" />
+                <button type="button" class="btn" style="flex-grow: 1;">获取验证码</button>
+            </div>
+            <div>
+                <input class="btn" type="submit" value="立即注册">
+                <div>
+                    <input type="checkbox" style="width: 10px; height: 10px;" required title="需同意服务条款" />
+                    <span class="tip">我已阅读并同意相关服务条款</span>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <script type="text/javascript">
+        let qrcodeDiv = document.querySelector("#qrcode");
+        new QRCode(qrcodeDiv, {
+            text: qrcodeDiv.innerText,
+            width: 150,
+            height: 150,
+        });
+    </script>
+</body>
+
+</html>

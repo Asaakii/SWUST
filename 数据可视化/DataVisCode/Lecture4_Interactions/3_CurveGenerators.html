@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>CurveGenerators</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1200px' height='800px'></svg>
+    <script type='text/javascript'>
+        
+        const svg = d3.select('svg')
+        const textPos = [100, 230]
+
+        const data = new Array
+        for (let i = 0; i < 10; i++) {
+            let tempArr = [d3.randomInt(0, 200)(), d3.randomInt(0, 200)()]
+            data.push(tempArr)
+        }
+
+        svg.append('g')
+            .attr('transform', 'translate( 50, 50 )')
+            .call(liner, data, d3.curveLinear, 'd3.curveLinear', textPos)
+
+        svg.append('g')
+            .attr('transform', 'translate( 350, 50 )')
+            .call(liner, data, d3.curveStepAfter, 'd3.curveStepAfter', textPos)
+        svg.append('g')
+            .attr('transform', 'translate( 650, 50 )')
+            .call(liner, data, d3.curveStepBefore, 'd3.curveStepBefore', textPos)
+        svg.append('g')
+            .attr('transform', 'translate( 950, 50 )')
+            .call(liner, data, d3.curveStep, 'd3.curveStep', textPos)
+
+        svg.append('g')
+            .attr('transform', 'translate( 50, 450 )')
+            .call(liner, data, d3.curveNatural, 'd3.curveNatural', textPos)
+
+        const lineTension = [1, 0.75, 0.5, 0.25, 0]
+        svg.append('g')
+            .attr('transform', 'translate( 350, 450 )')
+            .call(liner, data, lineTension.map(t => d3.curveCardinal.tension(t)), 'd3.curveCardinal', textPos)
+        svg.append('g')
+            .attr('transform', 'translate( 650, 450 )')
+            .call(liner, data, lineTension.map(t => d3.curveCatmullRom.alpha(t)), 'd3.curveCatmullRom', textPos)
+        svg.append('g')
+            .attr('transform', 'translate( 950, 450 )')
+            .call(liner, data, lineTension.map(t => d3.curveBundle.beta(t)), 'd3.curveBundle', textPos)
+
+
+        function liner(g, data, curve, text, pos) {
+            if (!(curve instanceof Array)) {
+                curve = [curve]
+            }
+
+            const scale = d3.scaleLinear().domain([0, 2, 4]).range(['red', 'green', 'blue'])
+
+            const curveGenerator = d3.line()
+            for (let i = 0; i < curve.length; i++) {
+                g.append('path')
+                    .attr('d', curveGenerator.curve(curve[i])(data))
+                    .attr('fill', 'none')
+                    .attr('stroke', scale(i))
+            }
+
+            g.selectAll('circle').data(data).enter().append('circle')
+                .attr('r', 3)
+                .attr('cx', d => d[0])
+                .attr('cy', d => d[1])
+                .attr('fill', 'black')
+
+            g.append('text')
+                .attr('x', pos[0]).attr('y', pos[1])
+                .attr('text-anchor', 'middle')
+                .attr('font-family', 'sans-serif')
+                .attr('font-size', '1em')
+                .text(text)
+        }
+
+    </script>
+</body>
+
+</html>

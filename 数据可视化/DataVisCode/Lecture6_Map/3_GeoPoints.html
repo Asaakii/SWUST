@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>Geopoints</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1200px' height='800px'></svg>
+    <script type='text/javascript'>
+
+        const svg = d3.select('svg')
+        const margin = { top: 100, left: 100, bottom: 100, right: 100 }
+        const innerWidth = parseInt(svg.attr('width')) - margin.left - margin.right
+        const innerHeight = parseInt(svg.attr('height')) - margin.top - margin.bottom
+
+        const tooltip = d3.select('body')
+            .append('div')
+            .style('position', 'absolute')
+            .style('z-index', '10')
+            .style('color', 'black')
+            .style('visibility', 'hidden')
+            .style('font-size', '16px')
+            .text('')
+
+        const projection = d3.geoMercator()
+            .center([104.7, 31.9])
+            .scale(8000)
+            .translate([innerWidth / 2, innerHeight / 2])
+
+        const path = d3.geoPath().projection(projection)
+
+        const colors = d3.scaleOrdinal(d3.schemeCategory10)
+
+        d3.json('../Resources/data/mianyang.geojson').then(data => {
+
+            svg.selectAll('path')
+                .data(data.features)
+                .enter()
+                .append('path')
+                .attr('d', path)
+                .attr('opacity', 0.6)
+                .attr('fill', (d, i) => colors(i))
+                .attr('stroke', '#fff')
+                .attr('stroke-width', 1)
+                .on('mouseenter', function (d) {
+                    d3.select(this).attr('opacity', 1.0)
+                })
+                .on('mouseleave', function (d) {
+                    d3.select(this).attr('opacity', 0.6)
+                })
+
+            const points = data.points //获取点位置
+
+            const getPoint = function (d) {
+                const lngLat = d.geometry.coordinates
+                const pointpos = projection(lngLat)
+                return pointpos
+            }
+
+            svg.selectAll('circle')
+                .data(points)
+                .join('circle')
+                .attr('class', 'point')
+                .attr('cx', d => getPoint(d)[0])
+                .attr('cy', d => getPoint(d)[1])
+                .attr('fill', 'yellow')
+                .attr('r', 5)
+                .on('mousemove', () => tooltip.style('top', (event.pageY - 10) + 'px')
+                    .style('left', (event.pageX + 10) + 'px'))
+                .on('mouseenter', (e, d) => tooltip.style('visibility', 'visible')
+                    .text(d.geometry.name))
+                .on('mouseleave', () => tooltip.style('visibility', 'hidden'))
+
+            svg.selectAll('text').data(points).join('text')
+        })
+
+        svg.call(d3.zoom().scaleExtent([1, 200]).on('zoom', zoomHandler))
+
+        function zoomHandler() {
+            let transform = d3.zoomTransform(this)
+            svg.attr('transform', `translate(${transform.x},
+            ${transform.y}) scale(${transform.k})`)
+        }
+    </script>
+</body>
+
+</html>

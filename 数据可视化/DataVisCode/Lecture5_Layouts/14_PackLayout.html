@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>PackLayout</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1100px' height='1100px'></svg>
+    <script type='text/javascript'>
+
+        const svg = d3.select('svg')
+        const margin = { top: 100, left: 100, bottom: 100, right: 100 }
+
+        d3.json('../Resources/data/tokyo2020.json').then(function (data) {
+            renderPack(data)
+        })
+
+        function renderPack(data) {
+
+            const hData = d3.hierarchy(data).sum(d => d.count).sort((a, b) => b.value - a.value)
+            const innerWidth = parseInt(svg.attr('width')) - margin.left - margin.right
+            const innerHeight = parseInt(svg.attr('height')) - margin.top - margin.bottom
+            const PackGroup = svg.append('g').attr('id', 'maingroup').attr('transform', `translate(${margin.left}, ${margin.top})`)
+            const PackLayout = d3.pack().size([innerWidth, innerHeight]).padding(3)
+            const PackData = PackLayout(hData)
+            console.log(PackData)
+
+            const colors = d3.scaleOrdinal(d3.schemePaired)
+
+            PackGroup.selectAll('circle')
+                .data(PackData)
+                .enter()
+                .append('circle')
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y)
+                .attr('r', d => d.r)
+                .attr('opacity', 0.7)
+                .attr('fill', d => colors(d.data.name))
+
+            PackGroup.selectAll('text')
+                .data(PackData.leaves())
+                .enter()
+                .append('text')
+                .attr('dy', '.1em')
+                .attr('font-size', 10)
+                .attr('text-anchor', 'middle')
+                .attr('x', d => d.x)
+                .attr('y', d => d.y)
+                .text(d => d.children ? d.data.name : `${d.data.name}：${d.data.count}`)
+        }
+    </script>
+</body>
+
+</html>

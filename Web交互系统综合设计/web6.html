@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="/js/qrcode.min.js"></script>
+    <title>图片截取</title>
+</head>
+
+<body>
+    <div id="ct"></div>
+    <div id="qrcode" style="position: absolute; right: 20px;">5120195562李鸿</div>
+    <script>
+        class ImageCutter {
+            constructor(ct, url, width, height) {
+                this.img = document.createElement('img');
+                this.img.src = url;
+                ct.appendChild(this.img);
+
+                this.cover = document.createElement('div');
+                ct.appendChild(this.cover);
+
+                this.canvas = document.createElement('canvas');
+                ct.appendChild(this.canvas);
+
+                ct.style.position = 'relative';
+                this.cover.style.cssText = 'background-color:rgba(255,0,0,0.5);position:absolute;';
+                this.canvas.style.border = 'solid black 1px';
+
+                this.img.onload = () => {
+                    let w = this.img.width;
+                    let h = this.img.height;
+                    let s1 = w / width;
+                    let s2 = h / height;
+                    this.scale = s1 > s2 ? s2 : s1;
+                    this.img.width = w / this.scale;
+                }
+
+                this.img.draggable = false;
+
+                ct.addEventListener('mousedown', e => {
+                    this.startPoint = {
+                        x: e.offsetX,
+                        y: e.offsetY
+                    }
+                });
+
+                ct.addEventListener('mousemove', e => {
+                    if (this.startPoint == undefined) {
+                        return;
+                    }
+
+                    let x = e.offsetX;
+                    let y = e.offsetY;
+
+                    if (e.target === this.cover) {
+                        x += this.cover.offsetLeft;
+                        y += this.cover.offsetTop;
+                    }
+
+                    let w = Math.abs(x - this.startPoint.x);
+                    let h = Math.abs(y - this.startPoint.y);
+                    this.cover.style.width = w + 'px';
+                    this.cover.style.height = h + 'px';
+
+                    let left = this.startPoint.x < x ? this.startPoint.x : x;
+                    let top = this.startPoint.y < y ? this.startPoint.y : y;
+                    this.cover.style.left = left + 'px';
+                    this.cover.style.top = top + 'px';
+                });
+
+                ct.addEventListener('mouseup', e => {
+                    let x = e.offsetX;
+                    let y = e.offsetY;
+
+                    if (e.target === this.cover) {
+                        x += this.cover.offsetLeft;
+                        y += this.cover.offsetTop;
+                    }
+
+                    let w = Math.abs(x - this.startPoint.x);
+                    let h = Math.abs(y - this.startPoint.y);
+                    this.cover.style.width = w + 'px';
+                    this.cover.style.height = h + 'px';
+
+                    let left = this.startPoint.x < x ? this.startPoint.x : x;
+                    let top = this.startPoint.y < y ? this.startPoint.y : y;
+                    this.cover.style.left = left + 'px';
+                    this.cover.style.top = top + 'px';
+
+                    this.canvas.width = w;
+                    this.canvas.height = h;
+                    const ctx = this.canvas.getContext('2d');
+
+                    ctx.drawImage(
+                        this.img,
+                        left * this.scale | 0,
+                        top * this.scale | 0,
+                        w * this.scale | 0,
+                        h * this.scale | 0,
+                        0,
+                        0,
+                        w,
+                        h
+                    );
+
+                    this.startPoint = undefined;
+                });
+            }
+        }
+
+        new ImageCutter(
+            document.querySelector('#ct'),
+            '/img/source.jpg',
+            400,
+            300
+        );
+    </script>
+
+    <script type="text/javascript">
+        let qrcodeDiv = document.querySelector("#qrcode");
+        new QRCode(qrcodeDiv, {
+            text: qrcodeDiv.innerText,
+            width: 150,
+            height: 150,
+        });
+    </script>
+</body>
+
+</html>

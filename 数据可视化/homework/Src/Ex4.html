@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>Ex4</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1200px' height='1200px'></svg>
+    <script type='text/javascript'>
+
+        const svg = d3.select('svg')
+
+        d3.json('../Resources/data/tokyo2020.json').then(function (data) {
+            const width = 975
+            const radius = width / 2
+            const tree = d3.cluster().size([2 * Math.PI, radius - 100])//定义树图的布局信息
+            const root = tree(d3.hierarchy(data)//将数据转换为节点树
+                .sort((a, b) => d3.ascending(a.data.name, b.data.name)));
+
+            function autoBox() {
+                document.body.appendChild(this);
+                const { x, y, width, height } = this.getBBox();
+                document.body.removeChild(this);
+                return [x, y, width, height];
+            }
+
+            //节点树
+            svg.append("g")
+                .attr('transform', `translate(600, 600)`)
+                .attr("fill", "none")
+                .attr("stroke", "#555")
+                .attr("stroke-opacity", 0.4)
+                .attr("stroke-width", 1.5)
+                .selectAll("path")
+                .data(root.links())
+                .join("path")
+                .attr("d", d3.linkRadial()//节点之间生成path
+                    .angle(d => d.x)
+                    .radius(d => d.y));
+
+            //圆圈节点
+            svg.append("g")
+                .attr('transform', `translate(600, 600)`)
+                .selectAll("circle")
+                .data(root.descendants())
+                .join("circle")
+                .attr("transform", d => `
+        rotate(${d.x * 180 / Math.PI - 90})
+        translate(${d.y},0)
+      `)
+                .attr("fill", d => d.children ? "#555" : "#999")
+                .attr("r", 2.5);
+
+            //文字
+            svg.append("g")
+                .attr('transform', `translate(600, 600)`)
+                .attr("font-family", "sans-serif")
+                .attr("font-size", 10)
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-width", 3)
+                .selectAll("text")
+                .data(root.descendants())
+                .join("text")
+                .attr("transform", d => `
+        rotate(${d.x * 180 / Math.PI - 90}) 
+        translate(${d.y},0) 
+        rotate(${d.x >= Math.PI ? 180 : 0})
+      `)
+                .attr("dy", "0.31em")
+                .attr("x", d => d.x < Math.PI === !d.children ? 6 : -6)
+                .attr("text-anchor", d => d.x < Math.PI === !d.children ? "start" : "end")
+                .text(d => d.data.name)//读取国家名
+                .clone(true).lower()
+                .attr("stroke", "white");
+
+            //奖牌数
+            svg.append("g")
+                .attr('transform', `translate(600, 600)`)
+                .attr("font-family", "sans-serif")
+                .attr("font-size", 10)
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-width", 3)
+                .selectAll("text")
+                .data(root.descendants())
+                .join("text")
+                .attr("transform", d => `
+        rotate(${d.x * 180 / Math.PI - 90}) 
+        translate(${d.y+22},0) 
+        rotate(${d.x >= Math.PI ? 180 : 0})
+      `)
+                .attr("dy", "0.31em")
+                .attr("x", d => d.x < Math.PI === !d.children ? 6 : -6)
+                .attr("text-anchor", d => d.x < Math.PI === !d.children ? "start" : "end")
+                .text(d => d.data.count)//读取奖牌数
+                .clone(true).lower()
+                .attr("stroke", "white");
+
+        })
+    </script>
+</body>
+
+</html>

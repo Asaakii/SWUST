@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>PieTransition</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1200px' height='800px'></svg>
+    <script type='text/javascript'>
+
+        const svg = d3.select('svg')
+
+        const dataset = [{ lastname: '张', value: 848, rank: 3 }, { lastname: '杨', value: 370, rank: 6 },
+        { lastname: '李', value: 953, rank: 1 }, { lastname: '王', value: 889, rank: 2 },
+        { lastname: '陈', value: 544, rank: 5 }, { lastname: '刘', value: 646, rank: 4 }]
+
+        const colors = d3.scaleOrdinal(d3.schemeCategory10)//设置颜色方案
+
+        const PieGroup = svg.append('g')
+            .attr('transform', 'translate(300,300)')
+
+        const pie = d3.pie() //创建饼图生成器,用于将原始数据转换为圆弧数据，注意：只生成数据，不绘制
+            .value(d => d.value) //设置饼图生成器，此行设置数据访问方式
+            .sort(d => d.rank) //设置饼图生成器，此行设置排序(不是按rank值的大小，而是按照先后顺序),默认按数值大小排序
+            .padAngle(0.01)//设置饼图生成器，此行设置切片间隔
+
+        const pieData = pie(dataset)//用数据实例化饼图生成器
+
+        const arc = d3.arc() //创建弧生成器
+            .outerRadius(200)//设置弧生成器，此行设置外半径
+            .innerRadius(100)//设置弧生成器，此行设置内半径
+
+        const slices = PieGroup.selectAll('path')
+            .data(pieData)
+            .enter()
+            .append('path')
+            .attr('fill', (d, i) => colors(i))
+            .attr('d', d => arc(d))
+            .transition().duration(3000)
+            .attrTween('d', function (d) {
+                const start = { startAngle: 0, endAngle: 0 }
+                const interpolate = d3.interpolate(start, d)
+                return function (t) {
+                    return arc(interpolate(t))
+                }
+            })
+
+        const labels = PieGroup.selectAll('text')
+            .data(pieData)
+            .enter()
+            .append('text')
+            .attr('text-anchor', 'middle')
+            .attr('fill', 'white')
+            .text(d => d.data.lastname)
+            .transition().duration(3000)
+            .attr('transform', d => `translate(${arc.centroid(d)})`)
+            //文字过渡效果与饼图不一致是因为质心计算方法的问题
+            //可以在D3源代码（第17290行）或官方文档中查看计算方法
+            //有兴趣的同学可以去尝试解决这个问题
+    </script>
+</body>
+
+</html>

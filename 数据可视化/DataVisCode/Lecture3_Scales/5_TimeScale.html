@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<title>TimeScale</title>
+	<script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+	<svg width='1200' height='800'></svg>
+	<script type='text/javascript'>
+
+		// 时间scale
+		const timeScale = d3.scaleTime([new Date(2021, 9, 0), new Date(2021, 9, 30)], [0, 100])
+
+		console.log(new Date(2021, 9, 15));//月份从0开始，9对应Oct.
+		console.log(timeScale(new Date(2021, 9, 15)))
+
+	</script>
+</body>
+
+</html>

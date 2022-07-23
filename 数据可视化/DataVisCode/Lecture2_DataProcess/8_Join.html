@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<title>Join</title>
+	<script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+	<p>大师兄</p>
+	<p>二师兄</p>
+	<p>三师兄</p>
+	<script type='text/javascript'>
+		const dataset = [5, 10, 15, 20, 25]
+		const selection = d3.select('body').selectAll('p').data(dataset).join('p').text(d => d)
+	</script>
+</body>
+
+</html>

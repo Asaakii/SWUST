@@ -1,0 +1,54 @@
+;编写一个程序 判别键盘上输入的字符 若是1-9字符 则显示之  若为A-Z或a-z字符 均显示c  若是回车字符 则结束程序  若为其它字符则不显示 继续等待新的字符输入
+
+DATA SEGMENT
+	DB 0
+DATA ENDS
+
+CODE SEGMENT
+	ASSUME CS:CODE,DS:DATA
+MAIN PROC FAR
+	PUSH DS
+	SUB AX,AX
+	PUSH AX
+	MOV AX,DATA
+	MOV DS,AX
+NEXT:
+	MOV AH,07
+	INT 21H
+	CMP AL,0DH
+	JE END_D
+	CMP AL,'0'
+	JGE DY0 		;>=0
+	JMP NEXT 	;<'0'...30H
+DY0:
+	CMP AL,'9'
+	JLE IS_09
+	CMP AL, 'A'
+	JGE DY_A 		;DAYU A
+	JMP NEXT 	;<'A'...41H
+DY_A:
+	CMP AL,'Z'
+	JLE IS_AZ
+	CMP AL,'a'
+	JGE DY_xA 	;DAYU xA
+	JMP NEXT 	;<'a'...61H
+DY_xA:
+	CMP AL,'z'
+	JLE IS_AZ
+	JMP NEXT
+IS_AZ:
+	MOV AH,02
+	MOV DL,'c'
+	INT 21H
+	JMP NEXT
+IS_09:
+	MOV AH,2
+	MOV DL,AL
+	INT 21H
+	JMP NEXT
+
+END_D:
+RET
+MAIN ENDP
+CODE ENDS
+END MAIN;

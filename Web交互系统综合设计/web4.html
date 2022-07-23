@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>HTML5 Video Player</title>
+    <script type="text/javascript" src="./js/qrcode.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+</head>
+
+<body>
+    <div id="qrcode">5120195562李鸿</div>
+    <h2>HTML Video</h2>
+    <video controls="controls" src="videos/1.mp4" width="800"></video>
+    <div class="menu">
+        <h3>播放列表</h3>
+        <ol></ol>
+    </div>
+    <div style="clear: both;"></div>
+
+    <script src="js/index.js"></script>
+
+    <script type="text/javascript">
+        let qrcodeDiv = document.querySelector("#qrcode");
+        new QRCode(qrcodeDiv, {
+            text: qrcodeDiv.innerText,
+            width: 150,
+            height: 150,
+        });
+    </script>
+</body>
+
+</html>
+
+<!-- 1.用到了标签选择器、类选择器，用到了外部式CSS样式。
+2.Promise对象是异步编程的一种解决方案。比传统的解决方案更加强大。简而言之，Promise是保存着某个未来才会结束的事件的一个容器。并且在ES6中规定Promise对象是一个构造函数，用来生成promise实例。 -->

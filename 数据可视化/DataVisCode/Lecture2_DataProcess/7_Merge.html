@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<title>Merge</title>
+	<script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+	<p>大师兄</p>
+	<p>二师兄</p>
+	<p>三师兄</p>
+	<script type='text/javascript'>
+		
+		const dataset = [5, 10, 15, 20, 25]
+		//update模式
+		const updateSet = d3.select('body').selectAll('p').data(dataset)
+		// updateSet.text(d => d)//文本显示绑定数据
+
+		//enter模式
+		const enterSet = updateSet.enter()
+		const enterAppendSet = enterSet.append('p')
+		// enterAppendSet.text(d => d)//文本显示绑定数据
+		
+		//合并选择集
+		updateSet.merge(enterAppendSet).text(d => d)
+	</script>
+</body>
+
+</html>

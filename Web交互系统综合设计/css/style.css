@@ -1,0 +1,17 @@
+video{
+    float: left;
+}
+
+.menu{
+    float: left;
+    margin-left: 10px;
+}
+
+.menu li{
+    cursor: pointer;
+}
+
+.menu li:hover{
+    background-color: gray;
+    color: yellowgreen;
+}

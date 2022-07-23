@@ -1,0 +1,111 @@
+;将内存中10个无符号数由小到大排序  每个数为16位二进制
+;在上述已排好序的数据区里查找某—个数 若找到 显示其在数据区中的位置 否则显示N字符
+;把上述两个程序改编成子程序  并存入于程序库中  然后编写调用程序  完成排序及检索任务
+
+
+
+DATA 	SEGMENT
+A	DW 9150, 3756, 10345
+	DW 4060, 12576, 300, 666
+	DW 3420, 456, 1024
+N	EQU	10
+DATA 	ENDS
+
+CODE 	SEGMENT
+	ASSUME	CS: CODE, DS: DATA
+START: 
+	MOV AX, DATA
+	MOV DS, AX
+	MOV CX, N-1
+	MOV BX, 0	;置外循环初值
+LOOP1: 
+	MOV DX, CX
+	MOV SI, 0 	;置内循环初值
+LOOP2: 
+	MOV AX, A[BX]
+	CMP AX, A[BX+SI+2]	;A(i)>A(j),转L1
+	JNA L1
+	MOV DI, A[BX]
+	MOV AX, A[BX+SI+1]
+	MOV A[BX], AX
+	MOV A[BX+SI+2], DI		;A(i)>A(j), 交换
+L1: 
+	ADD DI, 2
+	LOOP LOOP2	;没比较完，继续循环
+	ADD BX, 2
+	MOV CX, DX
+	LOOP LOOP1 	;继续外循环选次小值
+	MOV AH, 4CH
+
+	INT 21H
+
+CODE ENDS
+
+END START
+
+
+STACK 	SEGMENT PARA STACK ‘STACK’
+	DB 256 DUP(0)
+STACK 	ENDS
+
+DATA 	SEGMENT PARA PUBLIC ‘DATA’
+A	DW 300, 456, 666, 1024, 3420
+	DW 3756, 4060, 9150, 10345
+	DW 12578
+N	EQU 10
+X	DW 300
+DATA	ENDS
+
+CODE	SEGMENT PARA PUBLIC ‘CODE’
+	ASSUME CS: CODE, DS: DATA
+START: 
+	MOV AX, DATA
+	MOV DS, AX
+	MOV AH, 0
+	MOV DH, 0
+	MOV DL, N
+	MOV CL, 0
+	MOV DI, X 	;置DH, DL, CL, DI 初值
+	CALL SOR 	;调排序子程序
+	MOV AH, 4CH
+	INT 21H
+SOR	PROC NEAR
+L1: 
+	INC CL
+	MOV AL, DH
+	ADD AL, DL
+	SHR AL, 1
+	MOV CH, AL 	;J=(DH+DL)/2
+	SHL, AL, 1 	;J*2
+	MOV SI, AX
+	CMP A[SI], DI
+	JE NFOUND 	;J=DH, 没有找到，转NFOUND
+	MOV DH, CH
+	JMP L1 		;修改上限J DH
+GREAT: 
+	MOV DL, CH
+	JMP L1 		;修改下限，J DL
+FOUND: 
+	INC CH
+	CMP CH, 0AH
+	JNAE L2
+	MOV DL, 1
+	OR DL, 30H
+	MOV AH, 02H
+	INT 21H 		;找到，若是最后一个字符显示其位置。
+	MOV DL, 0
+	OR DL, 30H
+	JMP LOOK
+L2: 
+	MOV DL, CH
+	OR DL, 30H
+	JMP LOOK 	;找到显示其相应位置
+UFOUND: 
+	MOV DL, ‘N’	;没有找到，显示’N’
+LOOK: 
+	MOV AH, 02H
+	INT 21H
+	RET
+SOR	ENDP
+CODE	ENDS
+	END	START

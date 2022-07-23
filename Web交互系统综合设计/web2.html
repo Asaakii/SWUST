@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>踩砖块--canvas游戏</title>
+    <script type="text/javascript" src="./js/qrcode.min.js"></script>
+    <style type="text/css">
+        div {
+            position: absolute;
+            top: 0px;
+            left: 200px;
+        }
+
+        #score {
+            margin-top: 200px;
+            left: 500px;
+            width: 200px;
+            font: "微软雅黑";
+            color: rgb(0, 0, 0);
+            font-size: 30px;
+        }
+
+        #qrcode {
+            left: 500px;
+            width: 200px;
+            font: "微软雅黑";
+            color: rgb(0, 0, 0);
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>踩砖块 - canvas应用</h1>
+    </header>
+    <div id="qrcode">5120195562李鸿</div>
+    <div id="score">得分</div>
+    <main>
+        <canvas id="canvas" width="400" height="600"></canvas>
+    </main>
+</body>
+
+<script type="text/javascript">
+
+    var score = 0;
+    var div = document.getElementById("score");
+
+    let qrcodeDiv = document.querySelector("#qrcode");
+    new QRCode(qrcodeDiv, {
+        text: qrcodeDiv.innerText,
+        width: 150,
+        height: 150,
+    });
+
+    class Brick {
+        constructor(x, y, width, height) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+        }
+        /**
+        * 判断当前砖块是否踩上（被点击），返回布尔值
+        * @param x 坐标x
+        * @param y 坐标y
+        */
+        isSteppedOn(x, y) {
+            // Todo
+            if (x >= this.x && x <= this.width + this.x && y >= this.y && y <= this.height + this.y) {
+                return true;
+            }
+            return false;
+        }
+        /**
+        * 下降一格
+        */
+        fall() {
+            // Todo
+            this.y += this.height;
+        }
+    }
+
+    /**
+    * 游戏类
+    */
+    class Game {
+        /**
+        * 初始化函数
+        */
+        static init() {
+            // 为每行生成一个0到3的一个随机整数的砖块，初始砖块的坐标属性和宽高
+            for (let i = 0; i < 6; i++) {
+                let col = (Math.random() * 4) | 0;
+                let brick = new Brick(col * this.cellWidth, i * this.cellHeight, this.cellWidth, this.cellHeight);
+                this.bricks.push(brick);
+            }
+            // 注册点击click事件监听器
+            this.canvas.addEventListener('click', (e) => {
+                // 根据点击位置计算点击是否时砖块
+                let i = 0;
+                for (; i < this.bricks.length; i++) {
+                    let brick = this.bricks[i];
+                    if (brick.isSteppedOn(e.offsetX, e.offsetY)) {
+                        break;
+                    }
+                }
+                if (i === 5) { // 如果时最后一行砖块
+                    score++;
+                    div.innerHTML = "得分：" + score;
+                    this.goOn();
+                } else if (i === 6) { // 如果没有点中砖块
+                    div.innerHTML = "得分：" + "0";
+                    this.gameOver();
+                }
+            });
+        }
+        /**
+        * 绘制网格和砖块
+        */
+        static draw() {
+            const ctx = this.ctx;
+            // 清除全部绘制
+            ctx.clearRect(0, 0, 400, 600);
+            //画网格
+            for (let i = 0; i <= 6; i++) {
+                // Todo
+                ctx.moveTo(i * 100, 0);
+                ctx.lineTo(i * 100, 600);
+                ctx.stroke();
+
+                ctx.moveTo(0, i * 100);
+                ctx.lineTo(400, i * 100);
+                ctx.stroke();
+            }
+            // 画砖块
+            ctx.fillStyle = "gold";
+            for (let i = 0; i < this.bricks.length; i++) {
+                // Todo
+                let brick = this.bricks[i];
+                ctx.fillRect(brick.x + 1, brick.y + 1, brick.width - 2, brick.height - 2);
+            }
+        }
+
+        /**
+        * 游戏继续函数
+        */
+        static goOn() {
+            this.bricks.pop();
+            this.bricks.forEach((brick) => { brick.fall(); });
+            let col = (Math.random() * 4) | 0;
+            let brick = new Brick(col * this.cellWidth, 0, this.cellWidth, this.cellHeight);
+            this.bricks.unshift(brick);
+            this.draw();
+        }
+        static gameOver() {
+            alert("您踩空了，游戏结束！");
+        }
+    }
+
+    //静态属性
+    Game.canvas = document.querySelector("#canvas");
+    Game.ctx = Game.canvas.getContext("2d");
+    Game.cellWidth = 100;
+    Game.cellHeight = 100;
+    Game.bricks = [];
+    Game.init();
+    Game.draw();
+
+</script>
+
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>BarCase</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1200px' height='800px'></svg>
+    <script type='text/javascript'>
+
+        const svg = d3.select('svg')
+        const margin = { top: 100, left: 100 }
+        const barHeight = 200//条形图绘图区高度
+        const dataset = new Array()
+        const maxValue = 15000
+        const duration = 1000
+
+        d3.csv('../Resources/data/nation.csv').then(async function (data) {
+            // 处理数据
+            dataProcess(data)
+            // 绘制坐标轴
+            initRender()
+            // 绘制和更新图形
+            for (let i = 0; i < dataset.length; i++) {
+                if (i == 0) {
+                    await updateRender(dataset[i], dataset[i])
+                } else {
+                    await updateRender(dataset[i - 1], dataset[i])
+                }
+            }
+        })
+
+        // 处理数据
+        function dataProcess(data) {
+            data.forEach(row => {//数组遍历
+                let temp = []
+                let year
+                for (let key in row) {//对象遍历
+                    let obj = {}
+                    if (key === 'Year') {
+                        year = +row[key]
+                        continue
+                    }
+                    obj.year = year
+                    obj.nation = key
+                    obj.value = +row[key]
+                    temp.push(obj)
+                }
+                dataset.push(temp)
+                console.log(dataset)
+            })
+        }
+        // 绘制坐标轴
+        function initRender() {
+            //定义一个g元素，把所有绘图内容都放在g里面，形成一个整体，做图形变换的时候以一个整体变换
+            const g = svg.append('g').attr('id', 'maingroup').attr('transform', `translate(${margin.left}, ${margin.top})`)
+
+            //数据抽取
+            const nation = d3.map(dataset[0], d => d.nation)
+
+            const xScale = d3.scaleLinear([0, maxValue], [0, 600]).nice()//刻度优化
+            const yScale = d3.scaleBand(nation, [barHeight, 0]).padding(0.05)
+
+            //定义坐标轴
+            const xAxis = d3.axisTop(xScale).ticks(5).tickSize(0)//X轴
+            const yAxis = d3.axisLeft(yScale).tickSize(0)//Y轴
+
+            //绘制坐标轴
+            const g_xAxis = g.append('g').attr('id', 'xAxis').call(xAxis)//x轴作为一个组
+            g_xAxis.select('path').attr('stroke', 'noStroke')//不绘制坐标轴的线条
+            const g_yAxis = g.append('g').attr('id', 'yAxis').call(yAxis)//y轴作为一个组
+            g_yAxis.select('path').attr('stroke', 'noStroke')//不绘制坐标轴的线条
+
+            d3.selectAll('.tick text').attr('font-size', '16px')
+        }
+        // 绘制和更新图形
+        const updateRender = async function (prevData, currData) {
+            //排序
+            const sortData = [...currData]//复制一份数组，用于排序
+            sortData.sort((a, b) => a.value - b.value)
+            const updateNation = d3.map(sortData, d => d.nation)//提取排序后的国家
+
+            const updateGroup = d3.select('#maingroup')
+
+            const updateXscale = d3.scaleLinear([0, maxValue], [0, 600]).nice()
+            const updateYscale = d3.scaleBand(updateNation, [barHeight, 0]).padding(0.05)
+
+            // 多个元素用到相同的动画过渡方式，定义一个统一的transition
+            const transition = d3.transition().duration(duration).ease(d3.easeLinear)
+
+            // 条形图
+            const updateRect = updateGroup.selectAll('rect').data(currData)
+            const enterRect = updateRect.enter().append('rect')
+                .attr('x', 0)
+                .attr('y', d => updateYscale(d.nation))
+                .attr('width', d => updateXscale(d.value))
+                .attr('height', updateYscale.bandwidth())
+                .attr('fill', (d, i) => d3.schemeCategory10[i])
+
+            updateRect.merge(enterRect).transition(transition)
+                .attr('width', d => updateXscale(d.value))
+                .attr('y', d => updateYscale(d.nation))
+
+            // 纵轴标签
+            const updateTick = d3.select('#yAxis').selectAll('.tick').data(currData)
+                .transition(transition)
+                .attr('transform', d => `translate(0,${updateYscale(d.nation) + updateYscale.bandwidth() / 2})`)
+            
+            //渐变文本 
+            const updateText = updateGroup.selectAll('#datatext').data(currData)
+            const enterText = updateText.enter()
+                .append('text')
+                .attr('id', 'datatext')
+                .attr('x', d => updateXscale(d.value) + 5)
+                .attr('y', d => updateYscale(d.nation) + 5 + updateYscale.bandwidth() / 2)
+
+            const mergeText = updateText.merge(enterText).transition(transition)
+                .attr('x', d => updateXscale(d.value) + 5)
+                .attr('y', d => updateYscale(d.nation) + 5 + updateYscale.bandwidth() / 2)
+                .text(d => d.value)
+                .textTween((d, i) => d3.interpolateRound(prevData[i].value, d.value))
+
+            await transition.end()
+        }
+    </script>
+</body>
+
+</html>

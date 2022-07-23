@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>AreaGenerator</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1200px' height='800px'></svg>
+    <script type='text/javascript'>
+
+        const svg = d3.select('svg')
+
+        const dataset = new Array
+        for (let i = 0; i < 10; i++) {
+            let tempArr = [(i + 1) * 100, d3.randomInt(100, 300)()]
+            dataset.push(tempArr)
+        }
+
+        const lineGenerator = d3.line().curve(d3.curveCardinal)
+
+        svg.append('g').append('path')
+            .attr('d', lineGenerator(dataset))
+            .attr('fill', 'none')
+            .attr('stroke', d3.schemeCategory10[0])
+            .attr('stroke-width', 2)
+
+        const areaGenerator = d3.area()
+            .x(d => d[0])
+            .y0(d => d[1]+100)
+            // .y0(400)
+            .y1(d => d[1])
+            .curve(d3.curveCardinal)
+
+        svg.append('g').append('path')
+            .attr('d', areaGenerator(dataset))
+            .attr('fill', d3.schemeCategory10[1])
+            .attr('fill-opacity', 0.5)
+
+        svg.append('g').selectAll('circle').data(dataset)
+            .enter().append('circle')
+            .attr('cx', d => d[0])
+            .attr('cy', d => d[1])
+            .attr('fill', d3.schemeCategory10[2])
+            .attr('r', 5)
+
+    </script>
+</body>
+
+</html>

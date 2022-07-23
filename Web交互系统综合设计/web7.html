@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="/js/qrcode.min.js"></script>
+    <script src="/js/web7.js"></script>
+    <title>图片缩放与拖动</title>
+</head>
+
+<body>
+    <div id="qrcode" style="position: absolute; right: 20px;">5120195562李鸿</div>
+    <h1>图像缩放</h1>
+
+    <button onclick="zoom('in')">放大</button>
+    <button onclick="zoom('out')">缩小</button>
+    <button onclick="zoom('Re')">重置</button>
+    <div id="zoomer-ct" style="width:500px; height: 400px;" data-url="/img/1.jpg"></div>
+
+    <script>
+        const imageZoomer = new ImageZoomer(document.querySelector('#zoomer-ct'));
+
+        function zoom(dir) {
+            if (dir == 'in') {
+                imageZoomer.zoomIn();
+            }
+            else if (dir=='out') {
+                imageZoomer.zoomOut();
+            }
+            else {
+                imageZoomer.zoomRe();
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        let qrcodeDiv = document.querySelector("#qrcode");
+        new QRCode(qrcodeDiv, {
+            text: qrcodeDiv.innerText,
+            width: 150,
+            height: 150,
+        });
+    </script>
+</body>
+
+</html>

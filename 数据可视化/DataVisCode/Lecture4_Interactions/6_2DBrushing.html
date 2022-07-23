@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<title>2DBrushing</title>
+	<script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+	<svg width='1200' height='600'></svg>
+	<script>
+		const margin = ({ top: 20, right: 30, bottom: 30, left: 40 })
+		const svg = d3.select('svg')
+		const width = svg.attr('width')
+		const height = svg.attr('height')
+		const data = new Array()
+		d3.csv('../Resources/data/cars.csv').then(async function (dataorg) {
+			// 处理数据
+			dataProcess(dataorg)
+			render()
+		})
+
+		function dataProcess(dataorg) {
+			dataorg.forEach(row => {//数组遍历
+				const { Horsepower, Miles_per_Gallon, Name } = row
+				const obj = {}
+				obj.x = + Miles_per_Gallon
+				obj.y = + Horsepower
+				obj.name = Name
+				data.push(obj)
+			})
+		}
+
+		function render() {
+			const x = d3.scaleLinear()
+				.domain(d3.extent(data, d => d.x)).nice()
+				.range([margin.left, width - margin.right])
+
+			const y = d3.scaleLinear()
+				.domain(d3.extent(data, d => d.y)).nice()
+				.range([height - margin.bottom, margin.top])
+
+			const xAxis = d3.axisBottom(x)
+			const yAxis = d3.axisLeft(y)
+
+			const g = svg.append('g').attr('id', 'gAxis')
+
+			g.append('g').attr('id', 'xAxis').attr('transform', `translate(0,${height - margin.bottom})`).call(xAxis)
+			g.append('g').attr('id', 'yAxis').attr('transform', `translate(${margin.left},0)`).call(yAxis)
+			d3.selectAll('.domain').remove()//删除坐标轴线条
+
+			d3.select('#xAxis').append('text')
+				.attr('x', width - margin.right)
+				.attr('y', -4)
+				.attr('fill', '#000')
+				.attr('font-weight', 'bold')
+				.attr('text-anchor', 'end')
+				.text('Miles per Gallon')
+
+			d3.select('#yAxis').append('text')
+				.attr('x', 4)
+				.attr('y', margin.top + 4)
+				.attr('fill', '#000')
+				.attr('text-anchor', 'start')
+				.attr('font-weight', 'bold')
+				.text('Horsepower')
+
+			const dot = svg.append('g')
+				.attr('fill', 'none')
+				.attr('stroke', 'steelblue')
+				.attr('stroke-width', 1.5)
+				.selectAll('circle')
+				.data(data)
+				.join('circle')
+				.attr('transform', d => `translate(${x(d.x)},${y(d.y)})`)
+				.attr('r', 3)
+
+			const brush = d3.brush().on('start brush end', brushed)
+			svg.call(brush)
+
+			function brushed({ selection }) {
+				let value = []
+				if (selection) {
+					const [[x0, y0], [x1, y1]] = selection
+					value = dot
+						.style('stroke', 'steelblue')
+						.filter(d => x0 <= x(d.x) && x(d.x) < x1 && y0 <= y(d.y) && y(d.y) < y1)
+						.style('stroke', 'red')
+						.data()//data方法不带参数时，返回选择集元素的数据组成的数组
+				} else {
+					dot.style('stroke', 'steelblue')
+				}
+			}
+		}
+	</script>
+</body>
+
+</html>

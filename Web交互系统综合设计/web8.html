@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="/js/qrcode.min.js"></script>
+    <script src="/js/carousel.js"></script>
+    <title>多图滑屏插件应用</title>
+</head>
+
+<body>
+    <div id="qrcode" style="position: absolute; right: 20px;">5120195562李鸿</div>
+    <h1>滑屏插件应用</h1>
+
+    <div id="ct1" style="width:450px; height: 300px;"></div>
+
+    <script>
+        new Carousel(
+            document.querySelector("#ct1"),
+            [
+                "/img/01.png",
+                "/img/02.png",
+                "/img/03.png",
+                "/img/04.png",
+                "/img/05.png",
+                "/img/06.png"
+            ],
+        );
+    </script>
+
+    <script type="text/javascript">
+        let qrcodeDiv = document.querySelector("#qrcode");
+        new QRCode(qrcodeDiv, {
+            text: qrcodeDiv.innerText,
+            width: 150,
+            height: 150,
+        });
+    </script>
+</body>
+
+</html>

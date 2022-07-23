@@ -1,0 +1,20 @@
+ÿï³éÏó»ú³£ÓÃ»ã±àÖ¸ÁîÈçÏÂ£º
+LOAD  D    ½«DÖÐµÄÄÚÈÝ¼ÓÔØµ½²Ù×÷ÊýÕ»
+LOADI ³£Á¿ ½«³£Á¿Ñ¹Èë²Ù×÷ÊýÕ»
+LOAD £¨D£© ½«±äÁ¿µØÖ·DÑ¹Èë²Ù×÷ÊýÕ»
+STO    D   ½«²Ù×÷ÊýÕ»Õ»¶¥µ¥ÔªÄÚÈÝ´æÈëD
+ADD        ½«´ÎÕ»¶¥µ¥ÔªÓëÕ»¶¥µ¥ÔªÄÚÈÝÏà¼Ó£¬ºÍÖÃÓÚÕ»¶¥
+SUB        ½«Õ»¶¥µ¥Ôª¼õÈ¥´ÎÕ»¶¥µ¥ÔªÄÚÈÝ£¬²îÖÃÓÚÕ»¶¥
+MULT       ½«´ÎÕ»¶¥µ¥ÔªÓëÕ»¶¥µ¥ÔªÄÚÈÝÏà³Ë£¬»ýÖÃÓÚÕ»¶¥
+DIV        ½«Õ»¶¥µ¥Ôª³ý´ÎÕ»¶¥µ¥ÔªÄÚÈÝ£¬ÉÌÖÃÓÚÕ»¶¥£¨·ÖÄ¸ÎªÕ») 
+BR    lab  ÎÞÌõ¼þ×ªÒÆµ½lab  
+BRF   lab  ¼ì²éÕ»¶¥µ¥ÔªÂß¼­Öµ£¬ÈôÎª¼Ù£¨0£©Ôò×ªÒÆµ½lab
+EQ         ½«Õ»¶¥Á½µ¥Ôª×öµÈÓÚ±È½Ï£¬²¢½«½á¹ûÕæ»ò¼Ù£¨1»ò0£©ÖÃÓÚÕ»¶¥
+NOTEQ      ½«Õ»¶¥Á½µ¥Ôª×ö²»µÈÓÚ±È½Ï£¬²¢½«½á¹ûÕæ»ò¼Ù£¨1»ò0£©ÖÃÓÚÕ»¶¥
+GT         ´ÎÕ»¶¥´óÓÚÕ»¶¥²Ù×÷Êý£¬ÔòÕ»¶¥ÖÃ1£¬·ñÔòÖÃ0
+LES        ´ÎÕ»¶¥Ð¡ÓÚÕ»¶¥²Ù×÷Êý£¬ÔòÕ»¶¥ÖÃ1£¬·ñÔòÖÃ0
+GE         ´ÎÕ»¶¥´óÓÚµÈÓÚÕ»¶¥²Ù×÷Êý£¬ÔòÕ»¶¥ÖÃ1£¬·ñÔòÖÃ0
+LE         ´ÎÕ»¶¥Ð¡ÓÚµÈÓÚÕ»¶¥²Ù×÷Êý£¬ÔòÕ»¶¥ÖÃ1£¬·ñÔòÖÃ0
+AND        ½«Õ»¶¥Á½µ¥Ôª×öÂß¼­ÓëÔËËã£¬²¢½«½á¹ûÕæ»ò¼Ù£¨1»ò0£©ÖÃÓÚÕ»¶¥
+OR         ½«Õ»¶¥Á½µ¥Ôª×öÂß¼­»òÔËËã£¬²¢½«½á¹ûÕæ»ò¼Ù£¨1»ò0£©ÖÃÓÚÕ»¶¥
+NOT        ½«Õ»¶¥µÄÂß¼­ÖµÈ¡·´

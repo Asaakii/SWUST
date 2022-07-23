@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>TreeLayout</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1600px' height='1500px'></svg>
+    <script type='text/javascript'>
+
+        const svg = d3.select('svg')
+        const margin = { top: 100, left: 100, bottom: 100, right: 100 }
+
+        d3.json('../Resources/data/tokyo2020.json').then(function (data) {
+            renderAll(data)
+        })
+
+        function renderAll(data) {
+
+            const treeGroup = svg.append('g').attr('id', 'maingroup').attr('transform', `translate(${margin.left}, ${margin.top})`)
+            const innerWidth = parseInt(svg.attr('width')) - margin.left - margin.right
+            const innerHeight = parseInt(svg.attr('height')) - margin.top - margin.bottom
+
+            //生成层次节点数据
+            const hData = d3.hierarchy(data)
+            console.log(hData)
+
+            //定义树布局
+            const treeLayout = d3.tree().size([innerWidth, innerHeight])
+            //生成树布局节点数据，treeData比hData多了位置坐标信息(需注释掉本行才能看到差别)，x是垂直方向坐标，y是水平方向坐标，与前面不同
+            const treeData = treeLayout(hData)
+            console.log(treeData)
+
+            //生成连接点数据信息（文档：node.links）
+            const linksData = treeData.links()
+            console.log(linksData)
+
+            //连接线生成器（文档：d3.linkHorizontal），x是垂直方向坐标，y是水平方向坐标
+            const link = d3.linkHorizontal().x(d => d.y).y(d => d.x)
+
+            treeGroup.selectAll('link').data(linksData).enter().append('path')
+                .attr('class', 'link')
+                .attr('d', d => link(d))
+                .attr('fill', 'none')
+                .attr('stroke', 'red')
+                .attr('stroke-width', 2)
+
+            const nodes = treeGroup.selectAll('node').data(treeData).enter()
+            nodes.append('circle')
+                .attr('class', 'node')
+                .attr('transform', d => `translate(${d.y} ,${d.x})`)
+                .attr('r', 5)
+                .style('fill', '#f00')
+
+            nodes.append('text')
+                .attr('transform', d => `translate(${d.y} ,${d.x})`)
+                .attr('x', d => d.children ? -10 : 10)
+                .attr('dy', '.35em')
+                .attr('text-anchor', d => d.children ? 'end' : 'start')
+                .text(d => d.children ? d.data.name : `${d.data.name}：${d.data.count}`)
+                .style('fill', '#00f')
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>SymbolGenerators</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1200px' height='800px'></svg>
+    <script type='text/javascript'>
+
+        const svg = d3.select('svg')
+        //随机生成符号类型及位置
+        const data = new Array
+        const count = d3.symbols.length
+        for (let i = 0; i < count * 10; i++) {
+            let type = d3.randomInt(65, 72)()
+            let obj = {}
+            obj.x = d3.randomInt(100, 900)()
+            obj.y = d3.randomInt(100, 500)()
+            obj.typeCode = String.fromCharCode(type)
+            obj.typeColor = d3.schemeCategory10[type % count]
+            data.push(obj)
+        }
+
+        const symbolGenerator = d3.symbol().size(36)//创建和配置符号生成器
+        const symbolScale = d3.scaleOrdinal(d3.symbols).domain(['A', 'B', 'C', 'D', 'E', 'F', 'G'])
+
+        svg.selectAll('path').data(data).enter().append('path')
+            .attr('transform', d => `translate(${d.x} ,${d.y})`)
+            .attr('d', d => symbolGenerator.type(symbolScale(d.typeCode))())
+            .attr('fill', 'none')
+            .attr('stroke', d => d.typeColor)
+            .attr('stroke-width', 2)
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>SunburstLayout</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1100px' height='1100px'></svg>
+    <script type='text/javascript'>
+
+        const svg = d3.select('svg')
+        const margin = { top: 100, left: 100, bottom: 100, right: 100 }
+
+        d3.json('../Resources/data/tokyo2020.json').then(function (data) {
+            renderSunburst(data)
+        })
+
+        function renderSunburst(data) {
+
+            const hData = d3.hierarchy(data).sum(d => d.count).sort((a, b) => b.value - a.value)
+            const innerWidth = parseInt(svg.attr('width')) - margin.left - margin.right
+            const innerHeight = parseInt(svg.attr('height')) - margin.top - margin.bottom
+            const SunburstGroup = svg.append('g').attr('id', 'maingroup').attr('transform', `translate(${margin.left + innerWidth / 2}, ${margin.top + innerHeight / 2})`)
+            const radius = innerWidth / 2 - 100
+            
+            // 定义和设置旭日图布局
+            const SunburstLayout = d3.partition().size([2 * Math.PI, radius])
+            const SunburstData = SunburstLayout(hData)
+            console.log(SunburstData)
+
+            const arc = d3.arc()
+                .startAngle(d => d.x0)
+                .endAngle(d => d.x1)
+                .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
+                .padRadius(radius / 2)
+                .innerRadius(d => d.y0)
+                .outerRadius(d => d.y1 - 3)//3为层间间距
+
+            const colors = d3.scaleOrdinal(d3.schemePaired)
+            const cells = SunburstGroup.selectAll('path').data(SunburstData).enter()
+            // //过滤掉根节点，适用于根节点单独处理的情况
+            // const cells = SunburstGroup.selectAll('path').data(SunburstData.descendants().filter(d => d.depth)).enter()
+            cells.append('path')
+                .attr('fill', d => colors(d.data.name))
+                .attr('d', d => arc(d))
+
+            cells.append('text')
+                .attr("font-size", 10)
+                .attr('text-anchor', 'middle')
+                .attr('transform', function (d) {
+                    const x = (d.x0 + d.x1) / 2 * 180 / Math.PI
+                    const y = (d.y0 + d.y1) / 2
+                    return `rotate(${x - 90}) translate(${y - 5},0) rotate(${x < 180 ? 0 : 180})`
+                })
+                .attr('dy', '0.4em')
+                .text(d => d.children ? d.data.name : `${d.data.name}：${d.data.count}`)
+        }
+    </script>
+</body>
+
+</html>

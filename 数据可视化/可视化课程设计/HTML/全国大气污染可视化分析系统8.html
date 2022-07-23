@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset='utf-8'>
+    <title>全国大气污染可视化分析系统</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+    <script src='../Resources/lib/radarchart.js'></script>
+    <link rel='stylesheet' type='text/css' href='../Resources/css/radarchart.css'>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            width: 100%;
+            height: 900px;
+        }
+
+        #title {
+            text-align: center;
+            height: 40px;
+            font-size: 30px;
+        }
+
+        #view {
+            display: flex;
+            height: 100%;
+        }
+
+        #leftview {
+            /* 左边占总宽度60% */
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #rightview {
+            /* 右边占总宽度40% */
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #topleft {
+            /* 左上占总高度70% */
+            flex: 7;
+            border: 1px dotted rgb(182, 207, 247);
+        }
+
+        #bottomleft {
+            /* 左下占总高度30% */
+            flex: 3;
+            border: 1px dotted rgb(182, 207, 247);
+        }
+
+        #topright {
+            /* 右上占总高度50% */
+            flex: 1;
+            border: 1px dotted rgb(182, 207, 247);
+        }
+
+        #bottomright {
+            /* 右下占总高度50% */
+            flex: 1;
+            border: 1px dotted rgb(182, 207, 247);
+        }
+    </style>
+</head>
+
+<body background="../Resources/img/bg-body.jpg">
+    <header id='title' style="background-image:url(../Resources/img/bg-header.jpg)">
+        <font color=white>全国大气污染可视化分析系统</font>
+    </header>
+    <main id='view'>
+        <div id='leftview'>
+            <div id='topleft'></div>
+            <div id='bottomleft'></div>
+        </div>
+        <div id='rightview'>
+            <div id='topright'></div>
+            <div id='bottomright'></div>
+        </div>
+    </main>
+    <form name="single" action="" method="" style="position:absolute;top:600px;left:1180px;">
+        <select id="test" name="test" style="height:25px;font-size:15px;border-radius:10px">
+            <option value=27740>北京</option>
+            <option value=14162>上海</option>
+            <option value=10592>成都</option>
+            <option value=12604>武汉</option>
+            <option value=12802>重庆</option>
+            <option value=1649>广州</option>
+            <option value=1923>深圳</option>
+            <option value=1979>昆明</option>
+            <option value=11434>杭州</option>
+            <option value=12890>南京</option>
+            <option value=34737>乌鲁木齐</option>
+            <option value=12219>拉萨</option>
+        </select>
+    </form>
+
+    <script type='text/javascript'>
+
+        render()
+
+        function render() {
+            renderLeiDa()
+            renderBar()
+            renderPie()
+            renderMap()
+        }
+
+        //绘制地图模块
+        function renderMap() {
+            d3.json("../Resources/地图json数据/china.json").then(function (data) {
+
+                d3.csv("../Resources/data/CN-Reanalysis2013010100.csv").then(function (alldata) {
+                    // console.log(alldata)
+                    const color = d3.scaleSequential(d3.extent(alldata, d => d["AQI"]), d3.interpolateYlOrRd)//颜色投影
+                    const zoom = d3.zoom()//缩放比例
+                        .scaleExtent([1, 10])
+                        .on("zoom", zoomed)
+
+                    const h = document.getElementById('topleft').clientHeight
+                    const w = document.getElementById('topleft').clientWidth
+                    const svg = d3.select('#topleft')
+                        .append('svg')
+                        .attr('width', `${w}px`)
+                        .attr('height', `${h}px`)
+
+                    const margin = { top: 10, left: 10, bottom: 10, right: 10 }
+                    const innerWidth = w - margin.left - margin.right
+                    const innerHeight = h - margin.top - margin.bottom
+
+                    const projection = d3.geoMercator() //投影
+                        .center([103, 39])
+                        .translate([innerWidth / 2, innerHeight / 2])
+                        .scale(600)
+
+                    const geopath = d3.geoPath()      //生成地图path
+                        .projection(projection)
+
+                    const g = svg.append("g")
+
+                    const title = svg.append("text")   //地图标题
+                        .attr("class", "texts")
+                        .text("2013年1月1日全国AQI指数分布")
+                        .attr("x", 20)
+                        .attr("y", 30)
+                        .attr('fill', 'white')
+                        .attr("font-size", "20px")
+
+                    const province = g.append("g")
+                        .attr("cursor", "pointer")
+                        .attr("stroke", "#AAA")
+                        .attr("stroke-width", 0.3)//设置边线宽度
+                        .attr("stroke-linejoin", "round")
+                        .selectAll("path")
+                        .data(data.features)
+                        .enter()
+                        .append("path")
+                        .attr("class", "province")
+                        .attr("fill", "#FFF")
+                        .on("click", clicked)
+                        .attr("d", geopath)
+
+                    province.append("title")//鼠标停留显示省名
+                        .text(d => d.properties.name)
+
+                    const circle = g.selectAll("circle")//颜色像素点
+                        .data(alldata)
+                        .enter().append("g")
+                        .attr("transform", function (d) {
+                            //计算标注点的位置
+                            const coor = projection([d["lon"], d["lat"]]); //经纬度的投影
+                            return "translate(" + coor[0] + "," + coor[1] + ")";
+                        })
+                        .append("circle")
+                        .attr("r", 0.7)
+                        .attr("fill", d => color(d["AQI"]))
+                        .attr("opacity", 0.9)
+
+                    const texts = g.selectAll(".texts")    //地图上各个省的名字
+                        .data(data.features)
+                        .enter()
+                        .append("text")
+                        .attr("class", "texts")
+                        .text(function (d) { return d.properties.name; })
+                        .attr("transform", function (d) {
+                            var centroid = geopath.centroid(d),
+                                x = centroid[0],
+                                y = centroid[1];
+                            return "translate(" + x + ", " + y + ")";
+                        })
+                        .attr('fill', '#AAA')
+                        .attr("font-size", "10px")
+
+                    //点击动作
+                    function clicked(event, d) {
+                        const [[x0, y0], [x1, y1]] = geopath.bounds(d)
+                        event.stopPropagation();
+                        province.transition().style("fill", null);
+                        d3.select(this).transition().style("fill", d => color(d["AQI"]))
+                        svg.transition().duration(750).call(
+                            zoom.transform,
+                            d3.zoomIdentity
+                                .translate(w / 2, h / 2)
+                                .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / w, (y1 - y0) / h)))
+                                .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
+                            d3.pointer(event, svg.node())
+                        )
+                    }
+
+                    //缩放和移动
+                    function zoomed(event) {
+                        const { transform } = event;
+                        g.attr("transform", transform);
+                        g.attr("stroke-width", 1 / transform.k)
+                    }
+
+                    svg.call(zoom)
+
+                    return svg.node()
+                })
+            })
+        }
+
+        // 绘制条形图模块
+        function renderBar() {
+
+            d3.csv("../Resources/data/all_AQI.csv").then(function (dataset) {
+                // console.log(dataset)
+                dataset.sort((a, b) => a["AQI"] - b["AQI"])
+                const name = d3.map(dataset, d => d["name"])
+                const maxValue = d3.max(dataset, d => d["AQI"])
+
+                const h = document.getElementById('bottomleft').clientHeight
+                const w = document.getElementById('bottomleft').clientWidth
+                const barHeight = 350
+
+                const tooltip = d3.select('body')
+                    .append('div')
+                    .style('position', 'absolute')
+                    .style('color', 'white')
+                    .style('visibility', 'hidden')   // 一开始设置为不可见
+                    .style('font-size', '16px')
+
+                const colors = d3.scaleOrdinal(d3.schemeCategory10)
+
+                const xScale = d3.scaleLinear()
+                    .domain([0, maxValue])
+                    .range([0, 350])
+                    .nice()//刻度优化
+
+                const yScale = d3.scaleBand()
+                    .domain(name)
+                    .range([barHeight, 0])//屏幕坐标的Y轴和笛卡尔直角坐标系的Y轴上下相反
+                    .padding(0.05)
+
+                const svg = d3.select('#bottomleft')
+                    .append('svg')
+                    .attr('width', `${w}px`)
+                    .attr('height', `${h}px`)
+
+                const title = svg.append("text")   //地图标题
+                    .attr("class", "texts")
+                    .text("2013年1月1日各省份AQI指数排行")
+                    .attr("x", 800)
+                    .attr("y", 250)
+                    .attr('fill', 'white')
+                    .attr("font-size", "20px")
+
+                const g = svg.append("g")
+
+                const datascale = d3.scaleLinear()
+                    .domain([0, 500])
+                    .range([0, w - 200])
+
+                const BarGroup = g.append('g')
+                    .selectAll('rect')
+                    .data(dataset)
+                    .enter()
+                    .append('rect')
+                    .attr('x', 5)
+                    .attr('y', d => yScale(d["name"]))
+                    .attr('width', d => xScale(d["AQI"]))
+                    .attr('height', 10)
+                    .attr('fill', (d, i) => colors(i))
+                    .on('mousemove', (event, selectedObj) => {
+                        tooltip.style('visibility', 'visible')
+                            .style('left', `${d3.pointer(event)[0] + 20 + 'px'}`)
+                            .style('top', `${d3.pointer(event)[1] + 660 + 'px'}`)
+                            .text(`${selectedObj["name"]}的AQI指数为:${selectedObj["AQI"]}`)
+                    })
+                    .on('mouseout', () => tooltip.style('visibility', 'hidden'))
+
+                d3.selectAll('rect')//选择矩形
+                    .attr('width', 0)
+                    .transition()//设置动画过渡
+                    .duration(3000)//设置过渡时间
+                    .attr('width', d => xScale(d["AQI"]))
+            })
+        }
+
+        // 绘制雷达图模块
+        function renderLeiDa() {
+            const h = document.getElementById('topright').clientHeight
+            const w = document.getElementById('topright').clientWidth
+            const svg = d3.select('#topright')
+                .append('svg')
+                .attr('width', `${w}px`)
+                .attr('height', `${h}px`)
+
+            var radm = Math.floor(Math.random() * 1000), radm1 = Math.floor(Math.random() * 2000) + 1000
+            const margin = { top: 100, left: 50, bottom: 100, right: 100 }
+            const treeGroup = svg.append('g').attr('id', 'maingroup').attr('transform', `translate(50,30) scale(0.6)`)
+            var class1 = '', class2 = ''
+            d3.csv('../Resources/data/CN-Reanalysis2013010100.csv').then(function (data) {
+                var dataset1 = []
+                var dataset2 = []
+                var dataset = []
+                var j = 0, flag = 0;
+                var radm = Math.floor(Math.random() * 1000), radm1 = Math.floor(Math.random() * 2000) + 1000
+                data.forEach(function (item) {
+                    flag++
+                    if (dataset1.length % 5 === 0 && dataset1.length !== 0) {
+                        dataset[j] = dataset1
+                        dataset1 = []
+                        j++
+                    }
+                    if ((flag === radm) || (flag === radm1)) {
+                        dataset1.push({ "axis": "PM2.5", "value": Number(item.PM2_5) / 100 })
+                        dataset1.push({ "axis": "PM10", "value": Number(item.PM10) / 100 })
+                        dataset1.push({ "axis": "SO2", "value": Number(item.SO2) / 100 })
+                        dataset1.push({ "axis": "NO2", "value": Number(item.NO2) / 100 })
+                        dataset1.push({ "axis": "CO", "value": Number(item.CO) / 100 })
+                        if (flag === radm) { class1 = '经度:' + item.lat + '  ' + '纬度:' + item.lon }
+                        if (flag === radm1) { class2 = '经度:' + item.lat + '  ' + '纬度:' + item.lon }
+                    }
+                })
+                renderRadarChart(dataset)
+            })
+
+            function renderRadarChart(data) {
+                const colorscale = d3.scaleOrdinal(d3.schemeCategory10)
+                const LegendOptions = [class1, class2]
+                const innerWidth = parseInt(svg.attr('width')) - margin.left - margin.right
+                const innerHeight = parseInt(svg.attr('height')) - margin.top - margin.bottom
+                //配置参数，未配置的按默认值
+                const config = {
+                    radius: 5,
+                    maxValue: 0.6,
+                    tension: 3,
+                    borderDashOffset: 1.0,
+                    borderWidth: 1,
+                    levels: 6,
+                    ExtraWidthX: 300,//配置图形外的宽高，以完整显示文字
+                    ExtraWidthY: 300
+                }
+
+                RadarChart.draw('#maingroup', data, config)
+                const zoom = d3.zoom()//缩放比例
+                    .scaleExtent([1, 10])
+                    .on("zoom", zoomed)
+                function zoomed(event) {
+                    const { transform } = event;
+                    treeGroup.attr("transform", transform);
+                    treeGroup.attr("stroke-width", 1 / transform.k)
+                }
+                //标题
+                const title = svg.append("text")   //地图标题
+                    .attr("class", "texts")
+                    .text("2013年1月1日全国其中任意两地污染物雷达图")
+                    .attr("x", 20)
+                    .attr("y", 30)
+                    .attr('fill', 'white')
+                    .attr("font-size", "20px")
+                //图例	
+                const legend = svg.append('g')
+                    .attr('class', 'legend')
+                    .attr('height', 100)
+                    .attr('width', 200)
+                    .attr('transform', 'translate(100,50)')
+                //图例小方块
+                legend.selectAll('rect')
+                    .data(LegendOptions)
+                    .enter()
+                    .append('rect')
+                    .attr('x', innerWidth - 65)
+                    .attr('y', (d, i) => i * 20)
+                    .attr('width', 10)
+                    .attr('height', 10)
+                    .style('fill', (d, i) => colorscale(i))
+                //图例文字
+                legend.selectAll('text')
+                    .data(LegendOptions)
+                    .enter()
+                    .append('text')
+                    .attr('x', innerWidth - 52)
+                    .attr('y', (d, i) => i * 20 + 9)
+                    .attr('font-size', '11px')
+                    .attr('fill', '#737373')
+                    .text(d => d)
+            }
+        }
+
+        // 绘制饼图模块
+        function renderPie() {
+            const h = document.getElementById('bottomright').clientHeight
+            const w = document.getElementById('bottomright').clientWidth
+            const svg = d3.select('#bottomright')
+                .append('svg')
+                .attr('width', `${w}px`)
+                .attr('height', `${h}px`)
+
+            //下拉列表的交互
+            function single() {
+                var mySelect = document.single.test.value;
+                return mySelect;
+            }
+
+            d3.csv('../Resources/data/CN-Reanalysis2013010100.csv').then(data => {
+                var twoDimArray = new Array()// 二维数组
+                var valueArray = new Array()// 保存二维数组中的value值
+                data.forEach(row => {
+                    var oneDimArray = new Array() // 一维数组
+                    var count = 0
+                    for (var i in row) {// 遍历表头
+                        var obj = {}
+                        obj['content'] = row[i]// 污染物成分含量
+                        obj['contaminant'] = i// 污染物成分名称
+                        obj['rank'] = count
+                        count++
+                        if (count === 6)
+                            break;
+                        oneDimArray.push(obj);
+                    }
+                    twoDimArray.push(oneDimArray)
+                })
+                const margin = { top: 680, left: 1500 }
+                const colors = d3.scaleOrdinal(d3.schemeCategory10)
+
+                // 标题
+                const title = svg.append("text")
+                    .attr("class", "texts")
+                    .text("2013年1月1日全国部分省会城市空气污染物成分饼状图")
+                    .attr("x", 20)
+                    .attr("y", 20)
+                    .attr('fill', 'white')
+                    .attr("font-size", "20px")
+
+                const PieGroup = svg.append('g')
+                    .attr('transform', `translate(${w / 2},${h / 2})`)
+
+                // 生成饼图
+                const pie = d3.pie()
+                    .value(d => d.content)
+                    .sort(d => d.rank) // 设置饼图生成器，此行设置排序(不是按rank值的大小，而是按照先后顺序),默认按数值大小排序
+                    .padAngle(0.01)
+
+                // 加载饼图数据，默认为北京的数据
+                pie_data = pie(twoDimArray[27740])
+
+                const arc = d3.arc()
+                    .outerRadius(160)
+                    .innerRadius(80)
+
+                const tooltip = d3.select('body')
+                    .append('div')
+                    .style('position', 'absolute')
+                    .style('z-index', '10')
+                    .style('color', 'black')
+                    .style('visibility', 'hidden')   // 一开始设置为不可见
+                    .style('text-anchor', 'bold')
+                    .style('font-size', '1.5em')
+                    .style('border-style', 'normol')
+                    .style('background-color', 'white')
+                    .text('')
+
+                // 绘制饼图，添加鼠标事件
+                slices = PieGroup.selectAll('path')
+                    .data(pie_data)
+                    .enter()
+                    .append('path')
+                    .attr('fill', (d, i) => colors(i))
+                    .attr('d', d => arc(d))
+                    .on('mouseover', (event, selectedObj) => {
+                        tooltip.style('visibility', 'visible')
+                            .style('left', `${d3.pointer(event)[0] + margin.left + 'px'}`)
+                            .style('top', `${d3.pointer(event)[1] + margin.top + 'px'}`)
+                            .text(`${selectedObj.data.content}`)
+                    })
+                    .on('mouseout', () => tooltip.style('visibility', 'hidden'))
+
+                // 绘制标签
+                labels = PieGroup.selectAll('text')
+                    .data(pie_data)
+                    .enter()
+                    .append('text')
+                    .attr('fill', 'white')
+                    .transition()
+                    .attr('transform', d => `translate(${arc.centroid(d)})`)
+                    .attr('text-anchor', 'middle')
+                    .text(d => d.data.contaminant)
+
+                // 下拉列表更新时，更新数据
+                d3.selectAll("#test").on("change", function () {
+                    console.log(twoDimArray[single()])
+                    // 加载新数据集
+                    pie_data = pie(twoDimArray[single()])
+                    //清除原来的图形和标签
+                    slices = PieGroup.selectAll('path').remove()
+                    labels = PieGroup.selectAll('text').remove()
+                    // 更新图形和标签
+                    slices = PieGroup.selectAll('path')
+                        .data(pie_data)
+                        .enter()
+                        .append('path')
+                        .attr('fill', (d, i) => colors(i))
+                        .attr('d', d => arc(d))
+                        .on('mouseover', (event, selectedObj) => {
+                            tooltip.style('visibility', 'visible')
+                                .style('left', `${d3.pointer(event)[0] + margin.left + 'px'}`)
+                                .style('top', `${d3.pointer(event)[1] + margin.top + 'px'}`)
+                                .text(`${selectedObj.data.content}`)
+                        })
+                        .on('mouseout', () => tooltip.style('visibility', 'hidden'))
+                    labels = PieGroup.selectAll('text')
+                        .data(pie_data)
+                        .enter()
+                        .append('text')
+                        .attr('fill', 'white')
+                        .transition()
+                        .attr('transform', d => `translate(${arc.centroid(d)})`)
+                        .attr('text-anchor', 'middle')
+                        .text(d => d.data.contaminant)
+                })
+            })
+        }
+    </script>
+</body>
+
+</html>

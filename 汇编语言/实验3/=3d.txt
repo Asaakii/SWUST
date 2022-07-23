@@ -1,0 +1,48 @@
+;编写一程序  将字符串中的大小写字母相互转换  单个字母的转换程序必须写成子程序
+
+
+
+DATAS SEGMENT
+    INPUT DB 'please input letters:','$'  
+DATAS ENDS
+STACKS SEGMENT
+STACKS ENDS
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+START:
+    MOV AX,DATAS
+    MOV DS,AX
+    
+    MOV AH,9
+    LEA DX,INPUT ; 输出提示信息
+    INT 21H    
+xun:MOV AH,1     ; 等待输入
+    INT 21H
+    
+    CMP AL,0DH   ; 判断输入是否是回车
+    JE EXIT      ; 如果是回车则退出循环
+    
+    CMP AL,5AH   ; 判断输入的字符是否小于大写Z   
+    JLE LAST     ; 小于则变为小写字母
+    JMP NEXT     ; 否则就可能是小写字母
+
+	LAST:ADD AL,20H  ; 大写变为小写字母
+         MOV DL,AL   
+         MOV AH,2    ; 显示转换后的结果
+         INT 21H
+         JMP xun     ; 转换完成后继续循环输入字母
+
+    NEXT:CMP AL,61H  ; 判断是否大于小写字母a
+         JGE NEXTT   ; 大于则减20H变为大写字母
+         
+         
+    NEXTT:SUB AL,20H ; 转换为大写字母
+         MOV DL,AL
+         MOV AH,2    ; 显示转换后的结果
+         INT 21H
+         JMP xun     ; 转换完成后继续循环输入字母
+         
+EXIT:MOV AH,4CH
+     INT 21H
+CODES ENDS
+    END START

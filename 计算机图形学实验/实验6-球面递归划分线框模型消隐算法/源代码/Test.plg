@@ -1,0 +1,93 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: Test - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"Debug/Test.res" /d "_DEBUG" /d "_AFXDLL" "E:\学习资料\作业\计算机图形学实验\实验6-球面递归划分线框模型消隐算法\源代码\Test.rc"" 
+Creating temporary file "C:\Users\27872\AppData\Local\Temp\RSP9C9F.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/Test.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"E:\学习资料\作业\计算机图形学实验\实验6-球面递归划分线框模型消隐算法\源代码\Face.cpp"
+"E:\学习资料\作业\计算机图形学实验\实验6-球面递归划分线框模型消隐算法\源代码\Line.cpp"
+"E:\学习资料\作业\计算机图形学实验\实验6-球面递归划分线框模型消隐算法\源代码\MainFrm.cpp"
+"E:\学习资料\作业\计算机图形学实验\实验6-球面递归划分线框模型消隐算法\源代码\P2.cpp"
+"E:\学习资料\作业\计算机图形学实验\实验6-球面递归划分线框模型消隐算法\源代码\P3.cpp"
+"E:\学习资料\作业\计算机图形学实验\实验6-球面递归划分线框模型消隐算法\源代码\RGB.cpp"
+"E:\学习资料\作业\计算机图形学实验\实验6-球面递归划分线框模型消隐算法\源代码\Test.cpp"
+"E:\学习资料\作业\计算机图形学实验\实验6-球面递归划分线框模型消隐算法\源代码\TestDoc.cpp"
+"E:\学习资料\作业\计算机图形学实验\实验6-球面递归划分线框模型消隐算法\源代码\TestView.cpp"
+"E:\学习资料\作业\计算机图形学实验\实验6-球面递归划分线框模型消隐算法\源代码\Transform .cpp"
+"E:\学习资料\作业\计算机图形学实验\实验6-球面递归划分线框模型消隐算法\源代码\Vector.cpp"
+]
+Creating command line "cl.exe @C:\Users\27872\AppData\Local\Temp\RSP9C9F.tmp" 
+Creating temporary file "C:\Users\27872\AppData\Local\Temp\RSP9CA0.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/Test.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"E:\学习资料\作业\计算机图形学实验\实验6-球面递归划分线框模型消隐算法\源代码\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\Users\27872\AppData\Local\Temp\RSP9CA0.tmp" 
+Creating temporary file "C:\Users\27872\AppData\Local\Temp\RSP9CA1.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"Debug/Test.pdb" /debug /machine:I386 /out:"Debug/Test.exe" /pdbtype:sept 
+".\Debug\Face.obj"
+".\Debug\Line.obj"
+".\Debug\MainFrm.obj"
+".\Debug\P2.obj"
+".\Debug\P3.obj"
+".\Debug\RGB.obj"
+".\Debug\StdAfx.obj"
+".\Debug\Test.obj"
+".\Debug\TestDoc.obj"
+".\Debug\TestView.obj"
+".\Debug\Transform .obj"
+".\Debug\Vector.obj"
+".\Debug\Test.res"
+]
+Creating command line "link.exe @C:\Users\27872\AppData\Local\Temp\RSP9CA1.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+Face.cpp
+Line.cpp
+MainFrm.cpp
+P2.cpp
+P3.cpp
+RGB.cpp
+Test.cpp
+TestDoc.cpp
+TestView.cpp
+Transform .cpp
+Vector.cpp
+Generating Code...
+Linking...
+Creating temporary file "C:\Users\27872\AppData\Local\Temp\RSP9F52.tmp" with contents
+[
+/nologo /o"Debug/Test.bsc" 
+".\Debug\StdAfx.sbr"
+".\Debug\Face.sbr"
+".\Debug\Line.sbr"
+".\Debug\MainFrm.sbr"
+".\Debug\P2.sbr"
+".\Debug\P3.sbr"
+".\Debug\RGB.sbr"
+".\Debug\Test.sbr"
+".\Debug\TestDoc.sbr"
+".\Debug\TestView.sbr"
+".\Debug\Transform .sbr"
+".\Debug\Vector.sbr"]
+Creating command line "bscmake.exe @C:\Users\27872\AppData\Local\Temp\RSP9F52.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+Test.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

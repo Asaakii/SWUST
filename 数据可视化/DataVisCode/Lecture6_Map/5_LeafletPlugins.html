@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='UTF-8'>
+    <title>LeafletPluguns</title>
+    <link href='../Resources/css/leaflet.css' type='text/css' rel='stylesheet' />
+    <script src='../Resources/lib/leaflet.js'></script>
+    <script src='../Resources/lib/leaflet.ChineseTmsProviders.js'></script>
+</head>
+
+<body>
+    <div id='map' style='width: 100vw;height: 100vh'></div>
+    <script>
+        //初始化底图
+        /** 智图地图 **/
+        const Geoq1 = L.tileLayer.chinaProvider('Geoq.Normal.Map', {
+            maxZoom: 18,
+            minZoom: 5
+        })
+        const Geoq2 = L.tileLayer.chinaProvider('Geoq.Normal.PurplishBlue', {
+            maxZoom: 18,
+            minZoom: 5
+        })
+        const Geoq3 = L.tileLayer.chinaProvider('Geoq.Normal.Gray', {
+            maxZoom: 18,
+            minZoom: 5
+        })
+        const Geoq4 = L.tileLayer.chinaProvider('Geoq.Normal.Warm', {
+            maxZoom: 18,
+            minZoom: 5
+        })
+        const Geoq5 = L.tileLayer.chinaProvider('Geoq.Theme.Hydro', {
+            maxZoom: 18,
+            minZoom: 5
+        })
+
+        /** 高德地图 **/
+        const Gaode = L.tileLayer.chinaProvider('GaoDe.Normal.Map', {
+            maxZoom: 18,
+            minZoom: 5
+        })
+        const Gaodimgem = L.tileLayer.chinaProvider('GaoDe.Satellite.Map', {
+            maxZoom: 18,
+            minZoom: 5
+        })
+        const Gaodimga = L.tileLayer.chinaProvider('GaoDe.Satellite.Annotion', {
+            maxZoom: 18,
+            minZoom: 5
+        })
+        const Gaodimage = L.layerGroup([Gaodimgem, Gaodimga])
+
+        /** openstreetmap **/
+        const OSM = L.tileLayer.chinaProvider('OSM.Normal.Map', {
+            maxZoom: 18,
+            minZoom: 5,
+        })
+
+        //设置底图
+        const baseLayers = {
+            '智图地图': Geoq1,
+            '智图午夜蓝': Geoq2,
+            '智图灰色': Geoq3,
+            '智图暖色': Geoq4,
+            '智图水系': Geoq5,
+            '高德地图': Gaode,
+            '高德影像': Gaodimage,
+            'OSM': OSM
+        }
+
+        const map = L.map('map', {
+            center: [31.539179, 104.707404],
+            zoom: 15,
+            layers: [Geoq1],//设置默认底图
+            zoomControl: false
+        })
+
+        L.control.layers(baseLayers, null).addTo(map)//加载底图
+        L.control.zoom({
+            zoomInTitle: '放大',
+            zoomOutTitle: '缩小'
+        }).addTo(map)
+    </script>
+</body>
+
+</html>

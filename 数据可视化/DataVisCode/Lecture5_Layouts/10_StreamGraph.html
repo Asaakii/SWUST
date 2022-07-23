@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>StreamGraph</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <svg width='1200px' height='800px'></svg>
+    <script type='text/javascript'>
+
+        const svg = d3.select('svg')
+
+        const dataset = new Array
+
+        for (let i = 0; i < 20; i++)
+            dataset.push({ dataA: d3.randomInt(0, 100)(), dataB: d3.randomInt(0, 100)(), dataC: d3.randomInt(0, 100)() })
+
+        console.log(dataset)
+        const StackGroup = svg.append('g').attr('transform', 'translate(100,200)')
+
+        const stack = d3.stack()
+            .keys(['dataA', 'dataB', 'dataC'])
+            .order(d3.stackOrderInsideOut)//stackOrderNone
+            .offset(d3.stackOffsetWiggle)//This offset is recommended for streamgraphs in conjunction with the inside-out order. 
+
+        const data = stack(dataset)
+        console.log(data)
+
+        const lineGenerator = d3.line().curve(d3.curveCardinal).x((d, i) => i * 50).y(d => d[1])//流图
+        StackGroup.selectAll('linepath')
+            .data(data)
+            .enter()
+            .append('path')
+            .attr('class', 'linepath')//用类名区分不同的path
+            .attr('fill', 'none')
+            .attr('stroke', (d, i) => d3.schemeCategory10[i + 3])
+            .attr('stroke-width', 2)
+            .attr('d', d => lineGenerator(d))
+
+        const areaGenerator = d3.area().curve(d3.curveCardinal).x((d, i) => i * 50).y0(d => d[0]).y1(d => d[1])//流图
+        StackGroup.selectAll('areapath')
+            .data(data)
+            .enter()
+            .append('path')
+            .attr('class', 'areapath')//用类名区分不同的path
+            .attr('fill', (d, i) => d3.schemeCategory10[i])
+            .attr('fill-opacity', 0.9)
+            .attr('d', d => areaGenerator(d))
+
+        //标记数据位置
+        const circleCenter = new Array
+        for (let i = 0; i < 20; i++)
+            circleCenter.push({ x: i * 50, y: 300 })
+
+        StackGroup.selectAll('circle').data(circleCenter)
+            .enter().append('circle')
+            .attr('cx', d => d.x)
+            .attr('cy', d => d.y)
+            .attr('fill', 'red')
+            .attr('r', 3)
+
+    </script>
+</body>
+
+</html>

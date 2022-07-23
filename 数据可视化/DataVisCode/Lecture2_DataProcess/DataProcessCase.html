@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>DataProcessCase</title>
+    <script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+    <script type='text/javascript'>
+        d3.csv('../Resources/data/covid19.csv').then(function (data) {
+
+            console.log(data)
+            //d3.map(iterable, mapper),返回一个映射结果的数组，iterable是可迭代对象，mapper是映射函数
+            const confirmedArray = Array.from(d3.map(data, d => +d.confirmed))
+            const recoveredArray = Array.from(d3.map(data, d => +d.recovered))
+            const deathArray = Array.from(d3.map(data, d => +d.death))
+            console.log(confirmedArray)
+            
+            //Set()方法返回几个集合，无重复元素
+            const dateArray = Array.from(new Set(d3.map(data, d => d.date)))
+            const countryArray = Array.from(new Set(d3.map(data, d => d.country)))
+            console.log(`nation array: ${countryArray}` )
+
+            const min = d3.min(deathArray)
+            const max = d3.max(deathArray)
+            const sum = d3.sum(deathArray)
+            const mean = d3.mean(deathArray)//均值
+            const median = d3.median(deathArray)//中位数
+            console.log(min, max, sum, mean, median)
+
+            const filterValue = d3.filter(confirmedArray, d => d > 10000000)
+            console.log(filterValue)
+
+            const dataset = new Array()
+            data.forEach(row => {//数组遍历
+                const { confirmed, country, date, death, recovered } = row//解构赋值
+                const obj = {}
+                obj.date = new Date(date)//生成日期对象
+                obj.country = country
+                obj.confirmed = +confirmed//转换为数值
+                obj.recovered = +recovered
+                obj.death = +death
+                dataset.push(obj)
+            })
+            console.log(dataset)
+        })
+    </script>
+</body>
+
+</html>

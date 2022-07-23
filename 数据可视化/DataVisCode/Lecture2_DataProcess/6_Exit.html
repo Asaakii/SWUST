@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<title>Exit</title>
+	<script type='text/javascript' src='../Resources/lib/d3.js'></script>
+</head>
+
+<body>
+	<p>大师兄</p>
+	<p>二师兄</p>
+	<p>三师兄</p>
+	<p>四师兄</p>
+	<p>五师兄</p>
+	<script type='text/javascript'>
+		const dataset = [5, 10, 15]
+		//update选择集
+		const selection = d3.select('body').selectAll('p').data(dataset).text(d => d)
+			//exit选择集
+			console.log(selection.exit().nodes())
+			selection.exit().remove()
+	</script>
+</body>
+
+</html>

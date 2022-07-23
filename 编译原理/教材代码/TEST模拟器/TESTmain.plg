@@ -1,0 +1,37 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: TESTmain - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\WINDOWS\TEMP\RSPB192.TMP" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Fp"Debug/TESTmain.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"E:\sun文件夹\编译技术极其实现\Test模拟器\TESTmachine.c"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSPB192.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSPB193.TMP" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/TESTmain.pdb" /debug /machine:I386 /out:"Debug/TESTmain.exe" /pdbtype:sept 
+".\Debug\TESTmachine.obj"
+".\Debug\TESTmain.obj"
+]
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSPB193.TMP"
+<h3>Output Window</h3>
+Compiling...
+TESTmachine.c
+E:\sun文件夹\编译技术极其实现\Test模拟器\TESTmachine.c(25) : warning C4013: 'strlen' undefined; assuming extern returning int
+E:\sun文件夹\编译技术极其实现\Test模拟器\TESTmachine.c(30) : warning C4013: 'strncpy' undefined; assuming extern returning int
+E:\sun文件夹\编译技术极其实现\Test模拟器\TESTmachine.c(35) : warning C4013: 'strcat' undefined; assuming extern returning int
+E:\sun文件夹\编译技术极其实现\Test模拟器\TESTmachine.c(61) : warning C4013: 'strcmp' undefined; assuming extern returning int
+Linking...
+
+
+
+<h3>Results</h3>
+TESTmain.exe - 0 error(s), 4 warning(s)
+</pre>
+</body>
+</html>

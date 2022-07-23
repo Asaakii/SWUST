@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset='UTF-8'>
+	<title>SVG Basic Graphics</title>
+</head>
+
+<body>
+	<svg width='1200' height='800'>
+		<!--矩形-->
+		<rect width='200' height='100' x='20' y='20' style='fill:red;stroke:blue;stroke-width:4' />
+		<!--rx和ry属性可使矩形产生圆角-->
+		<rect width='200' height='100' x='250' y='20' rx='20' ry='10'
+			style='fill:red;stroke:blue;stroke-width:4; opacity: 0.2;' />
+		<!--圆-->
+		<circle cx='100' cy='280' r='80' style='fill:limegreen' />
+		<!--椭圆,RX属性定义的水平半径,RY属性定义的垂直半径-->
+		<ellipse cx='330' cy='280' rx='100' ry='80' style='fill:orange' />
+		<!--直线-->
+		<line x1='0' x2='600' y1='0' y2='360' style='stroke:#000;stroke-width:4' />
+		<!--多边形,points属性定义多边形每个角的x和y坐标-->
+		<polygon points='100,20 20,90 20,200' style='fill:green;stroke:orange;stroke-width:4' />
+		<!--文本-->
+		<text x='160' y='500' font-size='55'>
+			Hello, D3!
+		</text>
+	</svg>
+</body>
+
+</html>

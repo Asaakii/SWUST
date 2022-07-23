@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+	<title>RingCase</title>
+</head>
+
+<body>
+	<svg width='1200' height='800'>
+
+		<style type="text/css">
+			svg path {
+				fill: inherit
+			}
+
+			.ring1 {
+				fill: #df7a6d
+			}
+
+			.ring2 {
+				fill: #6fdb78
+			}
+
+			.ring3 {
+				fill: #5F5EC0
+			}
+
+			.ring4 {
+				fill: #c05ea3
+			}
+
+			.ring5 {
+				fill: #608c94
+			}
+
+			.ring6 {
+				fill: #14af3b
+			}
+
+			.ring7 {
+				fill: #bea221
+			}
+		</style>
+
+		<defs>
+			<g id='quaterRing'>    
+				<path d='M300 200 L300 100 A200 200 0 0 1 500 300 L400 300 A100 100 0 0 0 300 200Z'></path>
+			</g>
+		</defs>
+		<use href='#quaterRing' class='ring1' />
+		<use href='#quaterRing' transform='rotate(70,300,300)' class='ring2' />
+		<use href='#quaterRing' transform='rotate(130,300,300)' class='ring3' />
+		<use href='#quaterRing' transform='rotate(170,300,300)' class='ring4' />
+		<use href='#quaterRing' transform='rotate(260,300,300)' class='ring5' />
+		<use href='#quaterRing' transform='rotate(280,300,300)' class='ring6' />
+
+	</svg>
+</body>
+
+</html>
